@@ -1,13 +1,13 @@
 {
-  "name": "share",
+  "name": "{{name}}",
   "version": "1.0.0",
-  "description": "'内部学习'",
+  "description": "{{description}}",
   "main": "index.js",
   "scripts": {
     "start": "nodemon index",
     "dev": "webpack --config webpack.config.js"
   },
-  "author": "jp.sun",
+  "author": "{{author}}",
   "license": "ISC",
   "dependencies": {
     "babel": "^6.23.0",
