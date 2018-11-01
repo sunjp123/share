@@ -1,15 +1,16 @@
 {
-  "name": "{{name}}",
+  "name": "share",
   "version": "1.0.0",
-  "description": "{{description}}",
+  "description": "share",
   "main": "index.js",
   "scripts": {
     "start": "nodemon index",
     "dev": "webpack --config webpack.config.js"
   },
-  "author": "{{author}}",
+  "author": "sjp",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.18.0",
     "babel": "^6.23.0",
     "babel-cli": "^6.26.0",
     "babel-loader": "^7.1.5",
@@ -19,6 +20,7 @@
     "babel-preset-stage-0": "^6.24.1",
     "babel-preset-stage-2": "^6.24.1",
     "koa": "^2.5.3",
+    "koa-body": "^4.0.4",
     "koa-bodyparser": "^4.2.1",
     "koa-router": "^7.4.0",
     "koa-static": "^5.0.0",

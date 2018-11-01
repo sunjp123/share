@@ -13,6 +13,7 @@ class Home extends React.Component {
 			 <Router history={history}>
 				  <Switch>
 					  <Route path="/" exact component={ShareHome} />
+					  <Route path="/share" exact component={ShareHome} />
 				  </Switch>
 			 </Router>
            </Provider>
