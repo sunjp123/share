@@ -1,26 +1,21 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
-import { Router, Route, Switch } from 'react-router-dom'
-import ShareHome from './f_share/index'
-import createHistory from 'history/createBrowserHistory';
+import React from "react";
+import ReactDOM from "react-dom";
+import { createBrowserHistory } from "history";
+import { Router, Route, Switch } from "react-router-dom";
 
-const history = createHistory();
+import "./assets/css/material-dashboard-react.css";
 
-class Home extends React.Component {
-  render() {
-    return <Provider >
-			 <Router history={history}>
-				  <Switch>
-					  <Route path="/" exact component={ShareHome} />
-					  <Route path="/share" exact component={ShareHome} />
-				  </Switch>
-			 </Router>
-           </Provider>
-  }
-}
+import indexRoutes from "./route/index.jsx";
+
+const hist = createBrowserHistory();
 
 ReactDOM.render(
-	    <Home />,
-	    document.getElementById('app')
+  <Router history={hist}>
+    <Switch>
+      {indexRoutes.map((prop, key) => {
+        return <Route path={prop.path} component={prop.component} key={key} />;
+      })}
+    </Switch>
+  </Router>,
+  document.getElementById("root")
 );

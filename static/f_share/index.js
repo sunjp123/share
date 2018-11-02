@@ -5,7 +5,9 @@ export default class ShareHome extends React.Component{
 		super()
 	}
 	componentDidMount(){
-		fetchGet('http://localhost:8989/share/save',{title:"test",link:"test",author:"test",privite:false})
+		fetchGet('http://localhost:8989/share/list/12324').then(res => res.data).then(data=>{
+			console.log(data)
+		})
 	}
 	render(){
 		return 'hi'

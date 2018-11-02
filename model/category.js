@@ -1,16 +1,11 @@
-import Category from '../database/share';
+const CategoryDb = require('../database/category');
 
-export default class Category {
-     static save({title},callback){
-		 let share = new Share({
+module.exports =  class Category {
+     static async save({title}){
+		 let category = new CategoryDb({
 			title
 		 })
-		 share.save((err,res)=>{
-			  if(err){
-				  callback(false)
-			  }else{
-				  callback(res)
-			  }
-		 })
+		 let {err,res} = await category.save()
+		 return {err,res}
      }
 }

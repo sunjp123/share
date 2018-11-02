@@ -18,7 +18,6 @@ app.use(Views(path.join(__dirname, './static'), {
 }))
 
 router.get('/',async (ctx,next)=>{
-	 console.log('sfsd')
      await ctx.render('index')
 })
 

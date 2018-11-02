@@ -3,22 +3,27 @@ const Share = require('../model/share')
 let share = new Router()
 
 share.get('/',async (ctx,next)=>{
-	console.log('sdfs')
     await ctx.render('index')
 })
 
 share.get('/save',async (ctx,next)=>{
 	let {err,res} = await Share.save({...ctx.request.query})
-	let ret = {
-		status:false,
-		description:''
-	}
-	if(err){
-		ctx.body = {...ret,description:err}
-	}else{
-		ctx.body = {...ret,status:true,description:err}
+	ctx.body = {
+		status:err?false:true,
+		err,
+		res
 	}
 	
 })
+share.param('user', (id, ctx, next) => {
+		return next();
+	  })
+	 .get('/list/:user',async (ctx,next)=>{
+		let res  = await Share.find({uid:ctx.params.uid},{comments:false,privite:false})
+		ctx.body = {
+			status:res&&res.length?true:false,
+			res
+		}	
+	 })
 
 module.exports = share
