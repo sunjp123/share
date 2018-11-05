@@ -8,11 +8,11 @@ import "perfect-scrollbar/css/perfect-scrollbar.css";
 // @material-ui/core components
 import withStyles from "@material-ui/core/styles/withStyles";
 // core components
-//import Header from "../../f_common/components/Header/Header.jsx";
-//import Footer from "../../f_common/components/Footer/Footer.jsx";
+import Header from "../../f_common/components/Header/Header.jsx";
+import Footer from "../../f_common/components/Footer/Footer.jsx";
 import Sidebar from "../../f_common/components/Sidebar/Sidebar.jsx";
 
-import dashboardRoutes from "../../route/share.jsx";
+import shareRoutes from "../../route/share.jsx";
 
 import dashboardStyle from "../../assets/jss/material-dashboard-react/layouts/dashboardStyle.jsx";
 
@@ -21,7 +21,7 @@ import logo from "../../assets/img/reactlogo.png";
 
 const switchRoutes = (
   <Switch>
-    {dashboardRoutes.map((prop, key) => {
+    {shareRoutes.map((prop, key) => {
       if (prop.redirect)
         return <Redirect from={prop.path} to={prop.to} key={key} />;
       return <Route path={prop.path} component={prop.component} key={key} />;
@@ -70,7 +70,7 @@ class App extends React.Component {
     return (
       <div className={classes.wrapper}>
         <Sidebar
-          routes={dashboardRoutes}
+          routes={shareRoutes}
           logoText={"Creative Tim"}
           logo={logo}
           image={image}
@@ -80,11 +80,11 @@ class App extends React.Component {
           {...rest}
         />
         <div className={classes.mainPanel} ref="mainPanel">
-          {/*<Header
-            routes={dashboardRoutes}
+          <Header
+            routes={shareRoutes}
             handleDrawerToggle={this.handleDrawerToggle}
             {...rest}
-          />*/}
+          />
           {/* On the /maps route we want the map to be on full screen - this is not possible if the content and conatiner classes are present because they have some paddings which would make the map smaller */}
           {this.getRoute() ? (
             <div className={classes.content}>
@@ -93,7 +93,7 @@ class App extends React.Component {
           ) : (
             <div className={classes.map}>{switchRoutes}</div>
           )}
-          {/*this.getRoute() ? <Footer /> : null*/}
+          {this.getRoute() ? <Footer /> : null}
         </div>
       </div>
     );

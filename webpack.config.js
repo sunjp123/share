@@ -3,6 +3,7 @@
 const path = require('path');
 const args = require('minimist')(process.argv.slice(2));
 const webpack = require('webpack');
+console.log(path.resolve(__dirname, "./static/index.js"))
 module.exports = {
   devtool: 'inline-source-map',
   mode: "development", 
@@ -33,12 +34,6 @@ module.exports = {
 				  presets: ["env","stage-2","react"],
 				  cacheDirectory: true
 				}
-			},
-			{
-				loader:'style-loader'
-			},
-			{
-				loader:'url-loader'
 			}
 		]
 
