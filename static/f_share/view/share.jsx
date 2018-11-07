@@ -32,6 +32,8 @@ import CardFooter from "../../f_common/components/Card/CardFooter.jsx";
 
 import { bugs, website, server } from "../../f_common/variables/general.jsx";
 
+import {fetchGet} from "../../public/http"
+
 import {
   dailySalesChart,
   emailsSubscriptionChart,
@@ -41,9 +43,12 @@ import {
 import dashboardStyle from "../../assets/jss/material-dashboard-react/views/dashboardStyle.jsx";
 
 class Share extends React.Component {
-  state = {
-    value: 0
-  };
+  constructor(props){
+	  super(props)
+	  this.state = {
+		 value: 0
+	  }
+  }
   handleChange = (event, value) => {
     this.setState({ value });
   };
