@@ -3,18 +3,23 @@
 const path = require('path');
 const args = require('minimist')(process.argv.slice(2));
 const webpack = require('webpack');
-console.log(path.resolve(__dirname, "./static/index.js"))
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 module.exports = {
   devtool: 'inline-source-map',
   mode: "development", 
 
-  entry: path.resolve(__dirname, "./static/index.js"), // string | object | array
+  entry: {
+		main:path.resolve(__dirname, "./static/index.js") // string | object | array
+	},
   output: {
     // webpack 如何输出结果的相关选项
     path: path.resolve(__dirname, "./static/dist"), // string
     filename: "[name].js", // 用于多个入口点(entry point)（出口点？）
+	},
+	resolve: {
+    // 用于查找模块的目录
+    extensions: [".js", ".json", ".jsx", ".css"],
   },
-
   module: {
     // 关于模块配置
 
@@ -75,7 +80,21 @@ module.exports = {
 		loader: 'file-loader'
 	}
     ]
-  },
+	},
+	optimization: {
+			runtimeChunk: {
+					name: "manifest"
+			},
+			splitChunks: {
+					cacheGroups: {
+							commons: {
+									test: /[\\/]node_modules[\\/]/,
+									name: "vendor",
+									chunks: "all"
+							}
+					}
+			}
+	},
   plugins: [
 		new webpack.LoaderOptionsPlugin({
             debug: true
@@ -83,6 +102,7 @@ module.exports = {
         new webpack.NamedModulesPlugin(),
 		new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify('development')
-        })
+				}),
+				new BundleAnalyzerPlugin({analyzerMode:"static"})
   ]
 }
