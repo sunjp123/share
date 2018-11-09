@@ -15,10 +15,7 @@ share.get('/save',async (ctx,next)=>{
 	}
 	
 })
-share.param('user', (id, ctx, next) => {
-		return next();
-	  })
-	 .get('/list/:user',async (ctx,next)=>{
+share.get(['/list','/list/:user'],async (ctx,next)=>{
 		let res  = await Share.find({uid:ctx.params.uid},{comments:false,privite:false})
 		ctx.body = {
 			status:res&&res.length?true:false,

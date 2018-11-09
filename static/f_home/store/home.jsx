@@ -1,9 +1,9 @@
 import { createStore } from "redux"
 import Immutable from 'immutable'
 
-let defaultStore = Immutable.fromJS({
+let defaultStore = {
     a:1
-});
+};
 
 
 export default defaultStore

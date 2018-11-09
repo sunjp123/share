@@ -9,7 +9,7 @@ const storeList = (()=>{
         r.keys().forEach(key => cache[key] = r(key).default);
     }
 
-    importAll(require.context('../',true,/f_.*\/store\/index.jsx/))
+    importAll(require.context('../',true,/f_.*\/stores?\/index.jsx/))
 
     return  Object.assign.apply(null,Object.values(cache))
 })()
@@ -21,31 +21,26 @@ const reducerList = (()=>{
         r.keys().forEach(key => cache[key] = r(key).default);
     }
 
-    importAll(require.context('../',true,/f_.*\/reducer\/index.jsx/))
+    importAll(require.context('../',true,/f_.*\/reducers?\/index.jsx/))
 
     return Object.assign.apply(null,Object.values(cache))
 })()
 
 import { createStore } from "redux"
-import { persistCombineReducers  } from 'redux-persist'
-import storage from 'redux-persist/lib/storage'
+import { combineReducers } from 'redux-immutable'
 import Immutable from 'immutable'
 import base from './base.jsx'
 
-const config = {
-    key:"shareAny",
-    storage
-}
+const defaultReducers = combineReducers(reducerList);
 
-const defaultReducers = persistCombineReducers(config,reducerList);
-
+console.error(storeList)
 const defaultStore = Immutable.fromJS(storeList);
 
 
 
 const store = createStore(
     defaultReducers,
-    storeList,
+    defaultStore,
     base.devTool
 )
 export default store
