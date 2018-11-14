@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon index",
-    "dev": "webpack --config webpack.config.js  --progress"
+    "dev": "webpack --config webpack.config.js  --progress --watch"
   },
   "author": "sjp",
   "license": "ISC",

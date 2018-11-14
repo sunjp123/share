@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import * as shareAction from '../actions/share'
 import ShareComponent from '../components/share'
-
+import ShareCategoryComponent from '../components/shareCategory'
 class ShareContainer extends React.Component{
     constructor(props){
         super(props)
@@ -11,12 +11,16 @@ class ShareContainer extends React.Component{
         this.props.fetchInitShareList()
     }
     render(){
-        return <ShareComponent {...this.props} />
+        return (
+            <React.Fragment>
+                <ShareComponent {...this.props} />
+                <ShareCategoryComponent {...this.props} title="添加分类"/>
+            </React.Fragment>
+        )
     }
 }
 
 const mapStateToProps = (state) => {
-    console.error(state)
     return {
         share: state.get("share")
     }
@@ -25,6 +29,9 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => ({
     fetchInitShareList: () => {
         dispatch(shareAction.F_SHARE_FETCH_SHARE_INIT_ACTION())
+    },
+    fetchSaveCategory: (category) => {
+        dispatch(shareAction.F_SHARE_FETCH_SAVE_SHARE_CATEGORY(category))
     }  
 })
 

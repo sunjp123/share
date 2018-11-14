@@ -20,7 +20,7 @@ import SharePage from "../f_share/index.jsx";
 
 const dashboardRoutes = [
   {
-    path: "/sharepage",
+    path: "/share",
     sidebarName: "SharePage",
     navbarName: "Material SharePage",
     icon: Dashboard,
@@ -75,7 +75,7 @@ const dashboardRoutes = [
     icon: Unarchive,
     component:'' 
   },
-  { redirect: true, path: "/", to: "/sharepage", navbarName: "Redirect" }
+  { redirect: true, path: "/", to: "/share", navbarName: "Redirect" }
 ];
 
 export default dashboardRoutes;
