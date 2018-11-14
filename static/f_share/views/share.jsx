@@ -16,7 +16,6 @@ class ShareContainer extends React.Component{
 }
 
 const mapStateToProps = (state) => {
-    console.error(state)
     return {
         share: state.get("share")
     }
