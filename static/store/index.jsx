@@ -33,7 +33,6 @@ import base from './base.jsx'
 
 const defaultReducers = combineReducers(reducerList);
 
-console.error(storeList)
 const defaultStore = Immutable.fromJS(storeList);
 
 
