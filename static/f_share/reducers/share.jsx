@@ -8,6 +8,10 @@ reducerMap.set(types.UPDATE_EXTEND_INFO, (state, action) => {
     }
 })
 
+reducerMap.set(types.SAVE_SHARE_CATEGORY, (state, action) => {
+    return state.get('categories').push(action.category)
+})
+
 export default (state, action) => {
     if (reducerMap.has(action.type)) {
         return (reducerMap.get(action.type))(state, action);

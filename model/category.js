@@ -1,11 +1,11 @@
 const CategoryDb = require('../database/category');
 
 module.exports =  class Category {
-     static async save({title}){
+     static async save({name,belong}){
 		 let category = new CategoryDb({
-			title
+			name,
+			belong
 		 })
-		 let {err,res} = await category.save()
-		 return {err,res}
+		 return await category.save()
      }
 }
