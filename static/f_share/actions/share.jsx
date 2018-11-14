@@ -1,4 +1,10 @@
+import * as types from '../constants/share'
 import { fetchGet, fetchPost } from '../../public/http'
+
+const F_SHARE_SAVE_SHARE_CATEGORY = (category)=>({
+    type:types.SAVE_SHARE_CATEGORY,
+    category
+})
 
 export const F_SHARE_FETCH_SHARE_INIT_ACTION = ()=>{
     return (dispatch, getState) => {
@@ -11,10 +17,14 @@ export const F_SHARE_FETCH_SHARE_INIT_ACTION = ()=>{
     }
 }
 
-export const F_SHARE_FETCH_SAVE_SHARE_CATEGORY = (name)=>{
-    return (dispatch) =>{
+export const F_SHARE_FETCH_SAVE_SHARE_CATEGORY = (name,resolve,reject)=>{
+    return (dispatch) => { 
         fetchPost('/share/save/category',{name}).then(res => res.data).then(json =>{
-            console.log(json)
+            console.error(json)
+            dispatch(F_SHARE_SAVE_SHARE_CATEGORY(json.res))
+            resolve(json)
+        }).catch(e => {
+            reject(e)
         })
     }
 }

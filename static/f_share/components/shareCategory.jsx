@@ -34,10 +34,10 @@ class ShareCategory extends React.Component {
      })
   }
   onCategoryConfirm(){
-     this.props.fetchSaveCategory(this.state.category)
+     this.props.saveCategory(this.state.category)
   }
   render() {
-    const { classes ,title} = this.props;
+    const { classes ,title , open} = this.props;
     const customInput = {
       formControlProps:{
           className:'category-form'
@@ -55,8 +55,9 @@ class ShareCategory extends React.Component {
       success:false,
       error:false
     }
+    console.error(open)
     return (
-      <DialogComponent muiClasses={classes}>
+      <DialogComponent muiClasses={classes} open={open}>
         <DialogTitleComponent>
             {title}
         </DialogTitleComponent>

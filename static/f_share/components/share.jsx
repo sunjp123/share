@@ -61,7 +61,7 @@ class Share extends React.Component {
     return (
       <div>
         
-        <GridContainer>
+        <GridContainer onClick={this.props.openAddCategoryDialog}>
           <GridItem xs={12} sm={6} md={12}>
             <Card>
               <CardHeader color="info" stats icon>

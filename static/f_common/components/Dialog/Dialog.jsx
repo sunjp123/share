@@ -21,7 +21,7 @@ class DialogComponent extends React.Component {
   render(){
     let {children,muiClasses,open,...rest} = this.props
     return(
-      <Dialog {...rest} open classes={muiClasses}>
+      <Dialog {...rest} open={open} classes={muiClasses}>
         {children}
       </Dialog>
     )  
