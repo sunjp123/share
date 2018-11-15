@@ -22,6 +22,7 @@ reducerMap.set(types.SAVE_SHARE_ITEM, (state, action) => {
             if(category._id == action.item.category){
                 category.children.push(action.item)
             }
+            return category
         })
     })
 })

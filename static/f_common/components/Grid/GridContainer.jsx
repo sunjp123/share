@@ -7,13 +7,16 @@ const style = {
   grid: {
     margin: "0 -15px !important",
     width: "unset"
+  },
+  addButton:{
+    width:"170px"
   }
 };
 
 function GridContainer(props) {
-  const { classes, children, ...rest } = props;
+  const { classes, children, addButton,...rest } = props;
   return (
-    <Grid container {...rest} className={classes.grid}>
+    <Grid container {...rest} className={`${classes.grid} ${addButton?classes.addButton:''}`}>
       {children}
     </Grid>
   );

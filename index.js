@@ -26,4 +26,4 @@ router.use('/share',share.routes(),share.allowedMethods())
 
 app.use(router.routes())
 
-app.listen('8989')
+app.listen('3001')

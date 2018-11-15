@@ -71,6 +71,10 @@ const dashboardStyle = {
       fontWeight: "400",
       lineHeight: "1"
     }
+  },
+  container:{
+    display:"flex",
+    flexDirection:"column"
   }
 };
 

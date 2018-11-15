@@ -17,7 +17,8 @@ import AccessTime from "@material-ui/icons/AccessTime";
 import Accessibility from "@material-ui/icons/Accessibility";
 import BugReport from "@material-ui/icons/BugReport";
 import Code from "@material-ui/icons/Code";
-import Cloud from "@material-ui/icons/Cloud";
+import Tips from "@material-ui/icons/Info";
+import AddIcon from "@material-ui/icons/Add"
 // core components
 
 import GridItem from "../../f_common/components/Grid/GridItem.jsx";
@@ -59,7 +60,7 @@ class Share extends React.Component {
     this.setState({ value: index });
   };
   render() {
-    const { classes , share} = this.props,categories = share.get('categories')
+    const { classes , share} = this.props,categories = share.get('categories')||[]
     const addCardInfo = {
       img:'../../public/icon/logo.svg',
       title:'单击添加卡片',
@@ -67,7 +68,7 @@ class Share extends React.Component {
       add:true
     }
     return (
-      <div>
+      <div className={classes.container}>
         {
           categories.map((category,index)=>{
             return (
@@ -110,7 +111,28 @@ class Share extends React.Component {
             
           })
         }
-        
+        <GridContainer key={categories.length} addButton={true} onClick={this.props.openAddCategoryDialog}>
+              <GridItem xs={12} sm={6} md={12}>
+                <Card>
+                  <CardHeader color="info" stats icon>
+                    <CardIcon color="info">
+                      <Icon>
+                        <AddIcon/>
+                      </Icon>
+                    </CardIcon>
+                  </CardHeader>
+                  
+                  <CardFooter stats>
+                    <div className={classes.stats}>
+                      <Danger>
+                        <Tips color={'action'}/>
+                      </Danger>
+                    </div>
+                    <span>点击卡片添加</span>
+                  </CardFooter>
+                </Card>
+              </GridItem>
+            </GridContainer>
       </div>
     );
   }
