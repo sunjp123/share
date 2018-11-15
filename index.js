@@ -9,6 +9,7 @@ let share = require('./route/share')
 let app = new Koa()
 let router = new Router()
 app.use(bodyParser())
+
 app.use(Static(
     path.join( __dirname, './static')
 ))

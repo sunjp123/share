@@ -55,7 +55,6 @@ class ShareCategory extends React.Component {
       success:false,
       error:false
     }
-    console.error(open)
     return (
       <DialogComponent muiClasses={classes} open={open}>
         <DialogTitleComponent>

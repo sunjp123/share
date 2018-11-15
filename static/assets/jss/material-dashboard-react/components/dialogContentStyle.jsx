@@ -1,6 +1,7 @@
 const dialogContentStyle = {
     root:{
-        display:"flex"
+        display:"flex",
+        flexDirection:"column"
     }
 }
   

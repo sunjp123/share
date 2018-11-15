@@ -1,12 +1,11 @@
 const Sharedb = require('../database/share');
 
 module.exports = class Share {
-     static async save({title,link,author,privite}){
+     static async save({category,title,link,author,privite,target,description}){
 		 let share = new Sharedb({
-			title,link,author,privite
+			category,title,link,author,privite,target,description
 		 })
-		 let {err,res} = await share.save()
-		 return {err,res}
+		return await share.save()
 	 }
 	 static async find(condition={},opts={}){
 		return await Sharedb.find(condition,opts)

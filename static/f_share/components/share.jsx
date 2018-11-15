@@ -30,9 +30,11 @@ import Card from "../../f_common/components/Card/Card.jsx";
 import CardHeader from "../../f_common/components/Card/CardHeader.jsx";
 import CardIcon from "../../f_common/components/Card/CardIcon.jsx";
 import CardBody from "../../f_common/components/Card/CardBody.jsx";
+import CardContent from "../../f_common/components/Card/CardContent.jsx";
 import CardFooter from "../../f_common/components/Card/CardFooter.jsx";
 
 import { bugs, website, server } from "../../f_common/variables/general.jsx";
+
 
 import {
   dailySalesChart,
@@ -57,53 +59,58 @@ class Share extends React.Component {
     this.setState({ value: index });
   };
   render() {
-    const { classes } = this.props;
+    const { classes , share} = this.props,categories = share.get('categories')
+    const addCardInfo = {
+      img:'../../public/icon/logo.svg',
+      title:'单击添加卡片',
+      description:'',
+      add:true
+    }
     return (
       <div>
+        {
+          categories.map((category,index)=>{
+            return (
+              <GridContainer key={index} >
+              <GridItem xs={12} sm={6} md={12}>
+                <Card>
+                  <CardHeader color="info" stats icon>
+                    <CardIcon color="info">
+                      <Icon>{category.name}</Icon>
+                    </CardIcon>
+                  </CardHeader>
+                  <CardBody>
+                  <GridContainer>
+                    {
+                      category.children&&category.children.map((item,index)=>{
+                         return (
+                           
+                            <CardContent key={index} info={{...item,img:'../../public/icon/logo.svg'}} xs={4} sm={2} md={1}/>
+                          
+                         )
+                      })
+                    } 
+                    <CardContent onClick={()=>{console.error(123213);this.props.openAddItemDialog(category._id)}} key={category.children.length} info={addCardInfo} xs={12} sm={6} md={3}/>
+                  </GridContainer>
+                  </CardBody>
+                  {/* <CardFooter stats>
+                    <div className={classes.stats}>
+                      <Danger>
+                        <BugReport />
+                      </Danger>
+                      <a href="#pablo" onClick={e => e.preventDefault()}>
+                        Get more space
+                      </a>
+                    </div>
+                  </CardFooter> */}
+                </Card>
+              </GridItem>
+            </GridContainer>
+            )
+            
+          })
+        }
         
-        <GridContainer onClick={this.props.openAddCategoryDialog}>
-          <GridItem xs={12} sm={6} md={12}>
-            <Card>
-              <CardHeader color="info" stats icon>
-                <CardIcon color="info">
-                  <Icon>content_copy</Icon>
-                </CardIcon>
-              </CardHeader>
-              <CardBody>
-                <GridContainer> 
-                    <GridItem xs={12} sm={6} md={3}>
-                        <h1>sdfsdfsdfsdfdsf</h1>
-                    </GridItem>
-                    <GridItem xs={12} sm={6} md={3}>
-                        <h1>sdfsdfsdfsdfdsf</h1>
-                    </GridItem>
-                    <GridItem xs={12} sm={6} md={3}>
-                        <h1>sdfsdfsdfsdfdsf</h1>
-                    </GridItem>
-                    <GridItem xs={12} sm={6} md={3}>
-                        <h1>sdfsdfsdfsdfdsf</h1>
-                    </GridItem>
-                    <GridItem xs={12} sm={6} md={3}>
-                        <h1>sdfsdfsdfsdfdsf</h1>
-                    </GridItem>
-                    <GridItem xs={12} sm={6} md={3}>
-                        <h1>sdfsdfsdfsdfdsf</h1>
-                    </GridItem>
-                </GridContainer>
-              </CardBody>
-              <CardFooter stats>
-                <div className={classes.stats}>
-                  <Danger>
-                    <BugReport />
-                  </Danger>
-                  <a href="#pablo" onClick={e => e.preventDefault()}>
-                    Get more space
-                  </a>
-                </div>
-              </CardFooter>
-            </Card>
-          </GridItem>
-        </GridContainer>
       </div>
     );
   }

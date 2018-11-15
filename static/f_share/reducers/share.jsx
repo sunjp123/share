@@ -8,9 +8,24 @@ reducerMap.set(types.UPDATE_EXTEND_INFO, (state, action) => {
     }
 })
 
-reducerMap.set(types.SAVE_SHARE_CATEGORY, (state, action) => {
-    return state.get('categories').push(action.category)
+reducerMap.set(types.INIT_DATA, (state, action) => {
+    return state.update('categories',(categories)=>categories.concat(action.categories))
 })
+
+reducerMap.set(types.SAVE_SHARE_CATEGORY, (state, action) => {
+    return state.update('categories',(categories)=>categories.push(action.category))
+})
+
+reducerMap.set(types.SAVE_SHARE_ITEM, (state, action) => {
+    return state.update('categories',(categories)=>{
+        return categories.map(category=>{
+            if(category._id == action.item.category){
+                category.children.push(action.item)
+            }
+        })
+    })
+})
+
 
 export default (state, action) => {
     if (reducerMap.has(action.type)) {

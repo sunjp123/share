@@ -7,5 +7,11 @@ module.exports =  class Category {
 			belong
 		 })
 		 return await category.save()
-     }
+	 }
+	 static async findCategory(condition={},opts={}){
+		return await CategoryDb.find(condition,opts)
+	 }
+	 static async find(condition={},opts={}){
+		return await CategoryDb.find(condition,opts).populate('children').exec()
+	 }
 }

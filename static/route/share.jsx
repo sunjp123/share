@@ -21,11 +21,11 @@ import SharePage from "../f_share/index.jsx";
 const dashboardRoutes = [
   {
     path: "/share",
-    sidebarName: "SharePage",
-    navbarName: "Material SharePage",
+    sidebarName: "ThreeJS",
+    navbarName: "ThreeJS",
     icon: Dashboard,
     component: SharePage
-  },
+  }/*,
   {
     path: "/user",
     sidebarName: "User Profile",
@@ -74,7 +74,7 @@ const dashboardRoutes = [
     navbarName: "Upgrade To PRO",
     icon: Unarchive,
     component:'' 
-  },
+  }*/,
   { redirect: true, path: "/", to: "/share", navbarName: "Redirect" }
 ];
 
