@@ -19,6 +19,8 @@ import BugReport from "@material-ui/icons/BugReport";
 import Code from "@material-ui/icons/Code";
 import Tips from "@material-ui/icons/Info";
 import AddIcon from "@material-ui/icons/Add"
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from "@material-ui/icons/Edit"
 // core components
 
 import GridItem from "../../f_common/components/Grid/GridItem.jsx";
@@ -33,6 +35,7 @@ import CardIcon from "../../f_common/components/Card/CardIcon.jsx";
 import CardBody from "../../f_common/components/Card/CardBody.jsx";
 import CardContent from "../../f_common/components/Card/CardContent.jsx";
 import CardFooter from "../../f_common/components/Card/CardFooter.jsx";
+import { ButtonBase , Button , Tooltip } from "@material-ui/core";
 
 import { bugs, website, server } from "../../f_common/variables/general.jsx";
 
@@ -45,12 +48,24 @@ import {
 
 import dashboardStyle from "../../assets/jss/material-dashboard-react/views/dashboardStyle.jsx";
 
+
 class Share extends React.Component {
   constructor(props){
-	  super(props)
+    super(props)
+    this.onOpenEditDialog = this.onOpenEditDialog.bind(this)
+    this.deleteItem = this.deleteItem.bind(this)
 	  this.state = {
 		 value: 0
 	  }
+  }
+  onOpenEditDialog(category,item){
+    this.props.openEditItemDialog(category,item)
+  }
+  deleteItem(category,item){
+    this.props.deleteItem(category,item)
+  }
+  componentWillReceiveProps(nextProps){
+    
   }
   handleChange = (event, value) => {
     this.setState({ value });
@@ -61,12 +76,6 @@ class Share extends React.Component {
   };
   render() {
     const { classes , share} = this.props,categories = share.get('categories')||[]
-    const addCardInfo = {
-      img:'../../public/icon/logo.svg',
-      title:'单击添加卡片',
-      description:'',
-      add:true
-    }
     return (
       <div className={classes.container}>
         {
@@ -79,6 +88,21 @@ class Share extends React.Component {
                     <CardIcon color="info">
                       <Icon>{category.name}</Icon>
                     </CardIcon>
+                      <Tooltip title="添加内容">
+                      <Button variant="fab" color="inherit" aria-label="Add" className={classes.button} onClick={()=>{this.props.openAddItemDialog(category._id)}}>
+                      <AddIcon />
+                      </Button>
+                      </Tooltip>
+                      <Tooltip title="编辑分类">
+                      <Button variant="fab" color="inherit" aria-label="Edit" className={classes.button} onClick={()=>{this.props.openEditCategoryDialog(category._id,category.name)}}>
+                        <EditIcon color="action" />
+                      </Button>
+                      </Tooltip>
+                      <Tooltip title="删除分类">
+                      <Button variant="fab"  aria-label="Delete" className={classes.button} onClick={()=>{this.props.deleteCategory(category._id)}}>
+                        <DeleteIcon />
+                      </Button>
+                      </Tooltip>
                   </CardHeader>
                   <CardBody>
                   <GridContainer>
@@ -86,24 +110,26 @@ class Share extends React.Component {
                       category.children&&category.children.map((item,index)=>{
                          return (
                            
-                            <CardContent key={index} info={{...item,img:'../../public/icon/logo.svg'}} xs={4} sm={2} md={1}/>
+                            <CardContent key={index} deleteItem={()=>{this.deleteItem(category._id,item)}} onOpenEditDialog={()=>this.onOpenEditDialog(category._id,item)} info={{...item,img:'../../public/icon/logo.svg'}} xs={4} sm={2} md={1}/>
                           
                          )
                       })
                     } 
-                    <CardContent onClick={()=>{console.error(123213);this.props.openAddItemDialog(category._id)}} key={category.children.length} info={addCardInfo} xs={12} sm={6} md={3}/>
                   </GridContainer>
                   </CardBody>
-                  {/* <CardFooter stats>
-                    <div className={classes.stats}>
-                      <Danger>
-                        <BugReport />
-                      </Danger>
-                      <a href="#pablo" onClick={e => e.preventDefault()}>
-                        Get more space
-                      </a>
-                    </div>
-                  </CardFooter> */}
+                  {
+                    !category.children || category.children.length == 0 ?(
+                      <CardFooter stats>
+                        <div className={classes.stats}>
+                          <Danger>
+                            <Warning />
+                          </Danger>
+                          <span>该类下暂无内容，请添加有效内容</span>
+                        </div>
+                      </CardFooter> 
+                    ):null
+                  }
+
                 </Card>
               </GridItem>
             </GridContainer>

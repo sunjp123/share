@@ -9,6 +9,7 @@ const ShareSchema = new Schema({
 			  date: Date,
 			  user:{type: Schema.Types.ObjectId, ref: 'User'}
 		  }],
+		  icon:String,
 	      date: { type: Date, default: Date.now },
 		  privite:Boolean,
 		  target:String,

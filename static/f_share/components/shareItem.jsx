@@ -26,6 +26,8 @@ class ShareItem extends React.Component {
     this.onLinkChange = this.onLinkChange.bind(this)
     this.onDescriptionChange = this.onDescriptionChange.bind(this)
     this.onItemConfirm = this.onItemConfirm.bind(this)
+    this.onItemCancel = this.onItemCancel.bind(this)
+    this.onIconChange = this.onIconChange.bind(this)
     this.state = {
         title:'标题',
         link:'',
@@ -47,14 +49,38 @@ class ShareItem extends React.Component {
       description:ev.target.value
     })
   }
+  onIconChange(ev){
+    this.setState({
+      icon:ev.target.files[0]
+    })
+  }
   onItemConfirm(){
-     this.props.saveItem({
-       category:this.props.category,
-       title:this.state.title,
-       link:this.state.link,
-       description:this.state.description,
-       target:'_blank',
-     })
+     let formData = new FormData(),params = {
+      category:this.props.category,
+      _id:this.props.item?this.props.item._id:'',
+      title:this.state.title,
+      link:this.state.link,
+      icon:this.state.icon,
+      description:this.state.description,
+      target:'_blank',
+    };
+
+    Object.entries(params).map(item=>{
+      // formData.append(item[0],item[1])
+      formData.append.apply(formData,item)
+    })
+
+    this.props.saveItem(formData)
+  }
+  onItemCancel(){
+    this.props.cancelItem()
+  }
+  componentWillReceiveProps(nextProps){
+    if(nextProps.item){
+       this.setState({
+         ...nextProps.item
+       })
+    }
   }
   render() {
     const { classes ,title , open} = this.props;
@@ -80,7 +106,7 @@ class ShareItem extends React.Component {
         <DialogContent>
             <CustomInput id={'share-item-dialog-title'}  
                 {...customInput} 
-                abelText={'标题'} 
+                labelText={'标题'} 
                 inputProps={{...customInput.inputProps,
                 placeholder:'标题',
                 onChange:this.onTitleChange,
@@ -102,9 +128,21 @@ class ShareItem extends React.Component {
                 onChange:this.onDescriptionChange,
                 value:this.state.description
               }}/>
+            <CustomInput id={'share-item-dialog-image'} 
+                {...customInput} 
+                labelText={'图标'}  
+                inputProps={{...customInput.inputProps,
+                placeholder:'图标',
+                type:'file',
+                inputProps:{
+                  accept:'image/*'
+                },
+                onChange:this.onIconChange
+              }}/>
         </DialogContent>
         <DialogActionComponent>
           <Button onClick={this.onItemConfirm} >确定</Button>
+          <Button onClick={this.onItemCancel} >取消</Button>
         </DialogActionComponent>
       </DialogComponent>
     );

@@ -7,6 +7,7 @@ import BubbleChart from "@material-ui/icons/BubbleChart";
 import LocationOn from "@material-ui/icons/LocationOn";
 import Notifications from "@material-ui/icons/Notifications";
 import Unarchive from "@material-ui/icons/Unarchive";
+import ShareIcon from "@material-ui/icons/ShareTwoTone"
 // core components/views
 
 import SharePage from "../f_share/index.jsx";
@@ -21,9 +22,9 @@ import SharePage from "../f_share/index.jsx";
 const dashboardRoutes = [
   {
     path: "/share",
-    sidebarName: "ThreeJS",
-    navbarName: "ThreeJS",
-    icon: Dashboard,
+    sidebarName: "我的分享",
+    navbarName: "我的分享",
+    icon: ShareIcon,
     component: SharePage
   }/*,
   {

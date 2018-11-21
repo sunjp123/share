@@ -13,7 +13,7 @@ const snackbarContentStyle = {
     ...defaultFont,
     flexWrap: "unset",
     position: "relative",
-    padding: "20px 15px",
+    padding: "10px 10px",
     lineHeight: "20px",
     marginBottom: "20px",
     fontSize: "14px",

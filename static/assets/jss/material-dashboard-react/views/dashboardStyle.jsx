@@ -1,6 +1,6 @@
 import { successColor } from "../../material-dashboard-react.jsx";
 
-const dashboardStyle = {
+const dashboardStyle = (theme)=>({
   successText: {
     color: successColor
   },
@@ -75,7 +75,22 @@ const dashboardStyle = {
   container:{
     display:"flex",
     flexDirection:"column"
+  },
+  button: {
+    width:"40px",
+    height:"40px",
+    margin: theme.spacing.unit,
+    background:'linear-gradient(60deg, #26c6da, #00acc1)',
+    '& svg':{
+       color:'#fff'
+    },
+    '&:hover':{
+      background:'linear-gradient(60deg, #1d97a7, #00acc1)',
+    }
+  },
+  sizeSmall:{
+    fontSize: "0.8125rem"
   }
-};
+});
 
 export default dashboardStyle;

@@ -29,14 +29,6 @@ const cardHeaderStyle = {
         padding: "15px"
       }
     },
-    "&$cardHeaderStats svg": {
-      fontSize: "36px",
-      lineHeight: "56px",
-      textAlign: "center",
-      width: "36px",
-      height: "36px",
-      margin: "10px 10px 4px"
-    },
     "&$cardHeaderStats i,&$cardHeaderStats .material-icons": {
       fontSize: "36px",
       lineHeight: "56px",
@@ -78,7 +70,7 @@ const cardHeaderStyle = {
       height: "24px",
       textAlign: "center",
       lineHeight: "33px",
-      margin: "5px 4px 0px"
+      // margin: "5px 4px 0px"
     }
   },
   warningCardHeader: {

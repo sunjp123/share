@@ -25,7 +25,7 @@ class ShareCategory extends React.Component {
     this.onCategoryChange = this.onCategoryChange.bind(this)
     this.onCategoryConfirm = this.onCategoryConfirm.bind(this)
     this.state = {
-        category:'test'
+        category:''
     }
   }
   onCategoryChange(ev) {
@@ -34,7 +34,14 @@ class ShareCategory extends React.Component {
      })
   }
   onCategoryConfirm(){
-     this.props.saveCategory(this.state.category)
+     this.props.saveCategory({name:this.state.category||this.props.defaultValue,_id:this.props._id})
+  }
+  componentWillReceiveProps(nextProps){
+    if(this.state.category!=nextProps.defaultValue){
+      this.setState({
+        category:nextProps.defaultValue
+      })
+    }  
   }
   render() {
     const { classes ,title , open} = this.props;

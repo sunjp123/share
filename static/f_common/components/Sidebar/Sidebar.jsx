@@ -27,17 +27,9 @@ const Sidebar = ({ ...props }) => {
       {routes.map((prop, key) => {
         if (prop.redirect) return null;
         var activePro = " ";
-        var listItemClasses;
-        if (prop.path === "/upgrade-to-pro") {
-          activePro = classes.activePro + " ";
-          listItemClasses = classNames({
-            [" " + classes[color]]: true
-          });
-        } else {
-          listItemClasses = classNames({
-            [" " + classes[color]]: activeRoute(prop.path)
-          });
-        }
+        var listItemClasses = classNames({
+          [" " + classes[color]]: activeRoute(prop.path)
+        });
         const whiteFontClasses = classNames({
           [" " + classes.whiteFont]: activeRoute(prop.path)
         });

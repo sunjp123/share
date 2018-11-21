@@ -11,7 +11,7 @@ import Close from "@material-ui/icons/Close";
 import snackbarContentStyle from "../../../assets/jss/material-dashboard-react/components/snackbarContentStyle.jsx";
 
 function Snackbar({ ...props }) {
-  const { classes, message, color, close, icon, place, open } = props;
+  const { classes, message, color, close, icon, place, open ,autoHideDuration,onClose} = props;
   var action = [];
   const messageClasses = classNames({
     [classes.iconMessage]: icon !== undefined
@@ -39,6 +39,10 @@ function Snackbar({ ...props }) {
             : place.indexOf("c") !== -1 ? "center" : "right"
       }}
       open={open}
+      onClose={onClose}
+      autoHideDuration={autoHideDuration}
+      transitionDuration={1000}
+      resumeHideDuration={null}
       message={
         <div>
           {icon !== undefined ? <props.icon className={classes.icon} /> : null}

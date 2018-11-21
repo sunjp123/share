@@ -5,9 +5,17 @@ let Static = require('koa-static')
 let Views = require('koa-views')
 let path = require('path')
 let bodyParser = require('koa-bodyparser');
+let session = require('koa-session');
 let share = require('./route/share')
+let CONFIG = require('./config/sessionConfig')
 let app = new Koa()
 let router = new Router()
+
+app.keys = ['sun share secret'];
+
+   
+app.use(session(CONFIG, app));
+
 app.use(bodyParser())
 
 app.use(Static(

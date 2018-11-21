@@ -13,7 +13,8 @@ module.exports = {
 	},
   output: {
     // webpack 如何输出结果的相关选项
-    path: path.resolve(__dirname, "./static/dist"), // string
+		path: path.resolve(__dirname, "./static/dist"), // string
+		publicPath:'/dist/',
     filename: "[name].js", // 用于多个入口点(entry point)（出口点？）
 	},
 	resolve: {
