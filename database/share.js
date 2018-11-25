@@ -11,11 +11,11 @@ const ShareSchema = new Schema({
 		  }],
 		  icon:String,
 	      date: { type: Date, default: Date.now },
-		  privite:Boolean,
+		  public:Boolean,
 		  target:String,
 		  description:String,
 		  category:{type: Schema.Types.ObjectId, ref: 'Category'},
-		  user:{type: Schema.Types.ObjectId, ref: 'User'}
+		  author:{type: Schema.Types.ObjectId, ref: 'User'}
 	    });
 
 module.exports =  mongoose.model('Share', ShareSchema);

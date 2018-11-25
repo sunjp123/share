@@ -18,27 +18,44 @@ import Search from "@material-ui/icons/Search";
 import CustomInput from "../CustomInput/CustomInput.jsx";
 import Button from "../CustomButtons/Button.jsx";
 
+import UserContainer from "../../containers/User/userContainer"
+
 import headerLinksStyle from "../../../assets/jss/material-dashboard-react/components/headerLinksStyle.jsx";
 
 class HeaderLinks extends React.Component {
   state = {
-    open: false
+    openMessage: false,
+    openPerson: false,
+    openUserInfo:false
   };
-  handleToggle = () => {
-    this.setState(state => ({ open: !state.open }));
+  handleMessageToggle = () => {
+    this.setState(state => ({ openMessage: !state.openMessage }));
   };
-
-  handleClose = event => {
-    if (this.anchorEl.contains(event.target)) {
-      return;
+  handlePersonToggle = () => {
+    if(!window.__USER_INFO__ || !window.__USER_INFO__._id){
+      return this.setState(state => ({ openUserInfo: !state.openUserInfo }));
     }
-
-    this.setState({ open: false });
+    this.setState(state => ({ openPerson: !state.openPerson ,openUserInfo:false}));
   };
-
+  handlePersonClose = event => {
+    if (!this.personEl.contains(event.target)) {
+      this.setState({ openPerson: false});
+    }
+  };
+  handleMessageClose = event => {
+    if (!this.messageEl.contains(event.target)) {
+      this.setState({ openMessage: false});
+    }
+  }
+  onLogout(){
+    this.props.fetchLogoutUser()
+  }
+  onModifyUser(){
+    this.setState(state => ({ openUserInfo: !state.openUserInfo }));
+  }
   render() {
     const { classes } = this.props;
-    const { open } = this.state;
+    const { openMessage ,openPerson,openUserInfo} = this.state;
     return (
       <div>
         <div className={classes.searchWrapper}>
@@ -66,37 +83,37 @@ class HeaderLinks extends React.Component {
         >
           <Dashboard className={classes.icons} />
           <Hidden mdUp implementation="css">
-            <p className={classes.linkText}>Dashboard</p>
+            <p className={classes.linkText}>主页</p>
           </Hidden>
         </Button>
         <div className={classes.manager}>
           <Button
             buttonRef={node => {
-              this.anchorEl = node;
+              this.messageEl = node;
             }}
             color={window.innerWidth > 959 ? "transparent" : "white"}
             justIcon={window.innerWidth > 959}
             simple={!(window.innerWidth > 959)}
-            aria-owns={open ? "menu-list-grow" : null}
+            aria-owns={openMessage ? "menu-list-grow-message" : null}
             aria-haspopup="true"
-            onClick={this.handleToggle}
+            onClick={this.handleMessageToggle}
             className={classes.buttonLink}
           >
             <Notifications className={classes.icons} />
             <span className={classes.notifications}>5</span>
             <Hidden mdUp implementation="css">
               <p onClick={this.handleClick} className={classes.linkText}>
-                Notification
+                消息
               </p>
             </Hidden>
           </Button>
           <Poppers
-            open={open}
-            anchorEl={this.anchorEl}
+            open={openMessage}
+            anchorEl={this.messageEl}
             transition
             disablePortal
             className={
-              classNames({ [classes.popperClose]: !open }) +
+              classNames({ [classes.popperClose]: !openMessage }) +
               " " +
               classes.pooperNav
             }
@@ -104,41 +121,41 @@ class HeaderLinks extends React.Component {
             {({ TransitionProps, placement }) => (
               <Grow
                 {...TransitionProps}
-                id="menu-list-grow"
+                id="menu-list-grow-message"
                 style={{
                   transformOrigin:
                     placement === "bottom" ? "center top" : "center bottom"
                 }}
               >
                 <Paper>
-                  <ClickAwayListener onClickAway={this.handleClose}>
+                  <ClickAwayListener onClickAway={this.handleMessageClose}>
                     <MenuList role="menu">
                       <MenuItem
-                        onClick={this.handleClose}
+                        onClick={this.handleMessageClose}
                         className={classes.dropdownItem}
                       >
                         Mike John responded to your email
                       </MenuItem>
                       <MenuItem
-                        onClick={this.handleClose}
+                        onClick={this.handleMessageClose}
                         className={classes.dropdownItem}
                       >
                         You have 5 new tasks
                       </MenuItem>
                       <MenuItem
-                        onClick={this.handleClose}
+                        onClick={this.handleMessageClose}
                         className={classes.dropdownItem}
                       >
                         You're now friend with Andrew
                       </MenuItem>
                       <MenuItem
-                        onClick={this.handleClose}
+                        onClick={this.handleMessageClose}
                         className={classes.dropdownItem}
                       >
                         Another Notification
                       </MenuItem>
                       <MenuItem
-                        onClick={this.handleClose}
+                        onClick={this.handleMessageClose}
                         className={classes.dropdownItem}
                       >
                         Another One
@@ -150,18 +167,68 @@ class HeaderLinks extends React.Component {
             )}
           </Poppers>
         </div>
+        <div className={classes.manager}>
         <Button
+          buttonRef={node => {
+            this.personEl = node;
+          }}
           color={window.innerWidth > 959 ? "transparent" : "white"}
           justIcon={window.innerWidth > 959}
           simple={!(window.innerWidth > 959)}
           aria-label="Person"
+          aria-haspopup="true"
+          aria-owns={openPerson ? "menu-list-grow-person" : null}
+          onClick={this.handlePersonToggle}
           className={classes.buttonLink}
         >
           <Person className={classes.icons} />
           <Hidden mdUp implementation="css">
-            <p className={classes.linkText}>Profile</p>
+            <p className={classes.linkText}>用户信息</p>
           </Hidden>
         </Button>
+        <Poppers
+            open={openPerson}
+            anchorEl={this.personEl}
+            transition
+            disablePortal
+            className={
+              classNames({ [classes.popperClose]: !openPerson }) +
+              " " +
+              classes.pooperNav
+            }
+          >
+            {({ TransitionProps, placement }) => (
+              <Grow
+                {...TransitionProps}
+                id="menu-list-grow-person"
+                style={{
+                  transformOrigin:
+                    placement === "bottom" ? "center top" : "center bottom"
+                }}
+              >
+                <Paper>
+                  <ClickAwayListener onClickAway={this.handlePersonClose}>
+                    <MenuList role="menu">
+                      <MenuItem
+                        onClick={(event)=>{this.onModifyUser();this.handlePersonClose(event)}}
+                        className={classes.dropdownItem}
+                      >
+                        修改用户信息
+                      </MenuItem>
+                      <MenuItem
+                        onClick={(event)=>{this.onLogout();this.handlePersonClose(event)}}
+                        className={classes.dropdownItem}
+                      >
+                        退出登录
+                      </MenuItem>
+                    </MenuList>
+                  </ClickAwayListener>
+                </Paper>
+              </Grow>
+            )}
+          </Poppers>
+          </div>
+          <UserContainer open={openUserInfo} onCancel={this.handlePersonToggle}/>
       </div>
     );
   }

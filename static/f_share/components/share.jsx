@@ -1,22 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
-// react plugin for creating charts
-import ChartistGraph from "react-chartist";
 // @material-ui/core
 import withStyles from "@material-ui/core/styles/withStyles";
 import Icon from "@material-ui/core/Icon";
 
 // @material-ui/icons
-import Store from "@material-ui/icons/Store";
 import Warning from "@material-ui/icons/Warning";
-import DateRange from "@material-ui/icons/DateRange";
-import LocalOffer from "@material-ui/icons/LocalOffer";
-import Update from "@material-ui/icons/Update";
-import ArrowUpward from "@material-ui/icons/ArrowUpward";
-import AccessTime from "@material-ui/icons/AccessTime";
-import Accessibility from "@material-ui/icons/Accessibility";
-import BugReport from "@material-ui/icons/BugReport";
-import Code from "@material-ui/icons/Code";
 import Tips from "@material-ui/icons/Info";
 import AddIcon from "@material-ui/icons/Add"
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -25,9 +14,7 @@ import EditIcon from "@material-ui/icons/Edit"
 
 import GridItem from "../../f_common/components/Grid/GridItem.jsx";
 import GridContainer from "../../f_common/components/Grid/GridContainer.jsx";
-import Table from "../../f_common/components/Table/Table.jsx";
-import Tasks from "../../f_common/components/Tasks/Tasks.jsx";
-import CustomTabs from "../../f_common/components/CustomTabs/CustomTabs.jsx";
+
 import Danger from "../../f_common/components/Typography/Danger.jsx";
 import Card from "../../f_common/components/Card/Card.jsx";
 import CardHeader from "../../f_common/components/Card/CardHeader.jsx";
@@ -35,16 +22,8 @@ import CardIcon from "../../f_common/components/Card/CardIcon.jsx";
 import CardBody from "../../f_common/components/Card/CardBody.jsx";
 import CardContent from "../../f_common/components/Card/CardContent.jsx";
 import CardFooter from "../../f_common/components/Card/CardFooter.jsx";
-import { ButtonBase , Button , Tooltip } from "@material-ui/core";
+import {  Button , Tooltip } from "@material-ui/core";
 
-import { bugs, website, server } from "../../f_common/variables/general.jsx";
-
-
-import {
-  dailySalesChart,
-  emailsSubscriptionChart,
-  completedTasksChart
-} from "../../f_common/variables/charts.jsx";
 
 import dashboardStyle from "../../assets/jss/material-dashboard-react/views/dashboardStyle.jsx";
 
@@ -82,7 +61,7 @@ class Share extends React.Component {
           categories.map((category,index)=>{
             return (
               <GridContainer key={index} >
-              <GridItem xs={12} sm={6} md={12}>
+              <GridItem xs={12} sm={12} md={12}>
                 <Card>
                   <CardHeader color="info" stats icon>
                     <CardIcon color="info">
@@ -138,7 +117,7 @@ class Share extends React.Component {
           })
         }
         <GridContainer key={categories.length} addButton={true} onClick={this.props.openAddCategoryDialog}>
-              <GridItem xs={12} sm={6} md={12}>
+              <GridItem xs={12} sm={12} md={12}>
                 <Card>
                   <CardHeader color="info" stats icon>
                     <CardIcon color="info">

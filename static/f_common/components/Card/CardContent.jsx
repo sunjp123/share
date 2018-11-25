@@ -16,10 +16,23 @@ import { Tooltip, Hidden } from '@material-ui/core';
 const styles = theme => ({
   root: {
     flex: '1 1 33.33333%',
-    maxWidth:'33.33333%',
-    
+    maxWidth:'33.33333%',    
     display:"block"
 
+  },
+  '@media screen and (max-width: 900px)':{
+      root: {
+        flex: '1 1 50%',
+        maxWidth:'50%',     
+        display:"block"
+      }
+  },
+  '@media screen and (max-width: 600px)':{
+    root: {
+      flex: '1 1 100%',
+      maxWidth:'100%',     
+      display:"block"
+    }
   },
   paper:{
     margin:'10px 10px',

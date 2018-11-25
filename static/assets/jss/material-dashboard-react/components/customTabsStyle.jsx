@@ -1,4 +1,7 @@
 const customTabsStyle = {
+  card:{
+    "box-shadow":"none"
+  },
   cardTitle: {
     float: "left",
     padding: "10px 10px 10px 0px",

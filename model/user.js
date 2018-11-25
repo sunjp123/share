@@ -1,15 +1,18 @@
 const UserDb = require('../database/user');
 
 module.exports =  class User {
-     static async save({name,nickname,avator,email,phone}){
+     static async save({name,nickname,avator,email,phone,password}){
 		 let user = new UserDb({
 			name,
 	        nickname,
 	        avator,
-		    email,
+			email,
+			password,
 		    phone
 		 })
-		 let {err,res} = await user.save()
-		 return {err,res}
-     }
+		 return await user.save()
+	 }
+	 static async find(condition={},opts={}){
+		return await UserDb.find(condition,opts)
+	 }
 }

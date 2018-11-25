@@ -13,9 +13,11 @@
         <link rel="apple-touch-icon" sizes="76x76" href="public/icon/apple-icon.png">
         <script type="text/javascript">
         window.__MUI_USE_NEXT_TYPOGRAPHY_VARIANTS__ = true;
+        
         </script>
-        <script type="text/javascript" src="./dist/vendor.js"></script>
-        <script type="text/javascript" src="./dist/manifest.js"></script>
+        
+        <script type="text/javascript" src="/dist/vendor.js"></script>
+        <script type="text/javascript" src="/dist/manifest.js"></script>
         <!--
 		<link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
         <script src="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
@@ -33,7 +35,15 @@
         -->
         <title>Share Any</title>
     </head>
-    <body>
+    <body >
+        <textarea hidden id='__PUBLIC_KEY__' readonly>
+                <%= __publicKey__ %>
+        </textarea>
+        <input type="hidden" value="<%= __user__ %>" id='__USER_INFO__' />
+        <script type="text/javascript">
+            window.__PUBLIC_KEY__ = document.getElementById('__PUBLIC_KEY__').value
+            window.__USER_INFO__ = JSON.parse(document.getElementById('__USER_INFO__').value)
+        </script>
         <noscript>
           You need to enable JavaScript to run this app.
         </noscript>
@@ -49,6 +59,6 @@
           To create a production bundle, use `npm run build` or `yarn build`.
         -->
         
-		<script type="text/javascript" src="./dist/main.js" defer ></script>
+		<script type="text/javascript" src="/dist/main.js" defer ></script>
     </body>
 </html>

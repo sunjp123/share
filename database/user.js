@@ -2,7 +2,8 @@ const mongoose = require('./db.js');
 const Schema = mongoose.Schema;
 
 const ShareSchema = new Schema({
-	      name:  String,
+		  name:  String,
+		  password: String,
 	      nickname: String,
 	      avator:   String,
 		  email: String,

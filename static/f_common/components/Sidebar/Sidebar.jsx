@@ -12,7 +12,7 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import Icon from "@material-ui/core/Icon";
 // core components
-import HeaderLinks from "../Header/HeaderLinks.jsx";
+import HeaderLinksContainer from "../../containers/header/headerLinksContainer";
 
 import sidebarStyle from "../../../assets/jss/material-dashboard-react/components/sidebarStyle.jsx";
 
@@ -25,7 +25,7 @@ const Sidebar = ({ ...props }) => {
   var links = (
     <List className={classes.list}>
       {routes.map((prop, key) => {
-        if (prop.redirect) return null;
+        if (!prop || prop.redirect) return null;
         var activePro = " ";
         var listItemClasses = classNames({
           [" " + classes[color]]: activeRoute(prop.path)
@@ -61,7 +61,7 @@ const Sidebar = ({ ...props }) => {
   );
   var brand = (
     <div className={classes.logo}>
-      <a href="https://www.creative-tim.com" className={classes.logoLink}>
+      <a href="https://github.com/sunjp123" className={classes.logoLink}>
         <div className={classes.logoImage}>
           <img src={logo} alt="logo" className={classes.img} />
         </div>
@@ -86,7 +86,7 @@ const Sidebar = ({ ...props }) => {
         >
           {brand}
           <div className={classes.sidebarWrapper}>
-            <HeaderLinks />
+            <HeaderLinksContainer />
             {links}
           </div>
           {image !== undefined ? (

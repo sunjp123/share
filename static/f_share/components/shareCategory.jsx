@@ -2,7 +2,6 @@ import React from "react";
 
 import withStyles from "@material-ui/core/styles/withStyles";
 // @material-ui/core
-import Input from "@material-ui/core/Input";
 import Button from "@material-ui/core/Button";
 // @material-ui/icons
 // import Cloud from "@material-ui/icons/Cloud";
@@ -13,6 +12,7 @@ import DialogTitleComponent from "../../f_common/components/Dialog/DialogTitle";
 import DialogContent from "../../f_common/components/Dialog/DialogContent";
 import DialogActionComponent from "../../f_common/components/Dialog/DialogAction";
 import CustomInput from "../../f_common/components/CustomInput/CustomInput";
+import SwitchLabels from "../../f_common/components/Selection/switchLabels"
 const dialogStyle = {
     paper:{
       width:"400px"
@@ -24,8 +24,15 @@ class ShareCategory extends React.Component {
     super(props)
     this.onCategoryChange = this.onCategoryChange.bind(this)
     this.onCategoryConfirm = this.onCategoryConfirm.bind(this)
+    this.onChangeSwitchLabel = this.onChangeSwitchLabel.bind(this)
     this.state = {
-        category:''
+        category:'',
+        switchLabels:[{
+          label:'公共分享',
+          checked:true,
+          value:'public',
+          color:'primary'
+        }]
     }
   }
   onCategoryChange(ev) {
@@ -34,7 +41,10 @@ class ShareCategory extends React.Component {
      })
   }
   onCategoryConfirm(){
-     this.props.saveCategory({name:this.state.category||this.props.defaultValue,_id:this.props._id})
+     this.props.saveCategory({name:this.state.category||this.props.defaultValue,
+      _id:this.props._id,
+      publicFlag:this.state.switchLabels[0].checked
+    })
   }
   componentWillReceiveProps(nextProps){
     if(this.state.category!=nextProps.defaultValue){
@@ -42,6 +52,17 @@ class ShareCategory extends React.Component {
         category:nextProps.defaultValue
       })
     }  
+  }
+  onChangeSwitchLabel(changeSwitchIndex,event){
+    this.setState({
+      switchLabels:this.state.switchLabels.map((switchLabel,index)=>{
+          if(index == changeSwitchIndex){
+            switchLabel.checked = event.target.checked
+            switchLabel.label = switchLabel.checked?'公共分享':'我的收藏'
+          }
+          return switchLabel
+      })
+    })
   }
   render() {
     const { classes ,title , open} = this.props;
@@ -69,6 +90,7 @@ class ShareCategory extends React.Component {
         </DialogTitleComponent>
         <DialogContent>
             <CustomInput {...customInput} />
+            <SwitchLabels switchLabels = {this.state.switchLabels} onChange={this.onChangeSwitchLabel}/>
         </DialogContent>
         <DialogActionComponent>
           <Button onClick={this.onCategoryConfirm} >确定</Button>

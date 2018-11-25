@@ -29,7 +29,7 @@ function Footer({ ...props }) {
         <p className={classes.right}>
           <span>
             &copy; {1900 + new Date().getYear()}{" "}
-           分享你的快乐
+           记录你的快乐
           </span>
         </p>
       </div>

@@ -1,7 +1,7 @@
 
 import axios from 'axios'
 axios.interceptors.request.use(config => {
-    config.headers = { ...config.headers, 'Cache-Control': 'no-cache' }
+    config.headers = { ...config.headers, 'Cache-Control': 'no-cache' ,appName:navigator.appName}
     const r = Math.random();
     if (config.url.includes("?")) {
         config.url = config.url + "&v=" + r;

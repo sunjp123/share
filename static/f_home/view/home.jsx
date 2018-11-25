@@ -12,7 +12,7 @@ import Header from "../../f_common/components/Header/Header.jsx";
 import Footer from "../../f_common/components/Footer/Footer.jsx";
 import Sidebar from "../../f_common/components/Sidebar/Sidebar.jsx";
 
-import shareRoutes from "../../route/share.jsx";
+import shareRoutes from "../../route/home.jsx";
 
 import dashboardStyle from "../../assets/jss/material-dashboard-react/layouts/dashboardStyle.jsx";
 
@@ -22,9 +22,10 @@ import logo from "../../assets/img/reactlogo.png";
 const switchRoutes = (
   <Switch>
     {shareRoutes.map((prop, key) => {
+      if(!prop) return
       if (prop.redirect)
         return <Redirect from={prop.path} to={prop.to} key={key} />;
-      return <Route path={prop.path} component={prop.component} key={key} />;
+      return <Route path='/view/:page' component={prop.component} key={key} />;
     })}
   </Switch>
 );
@@ -71,7 +72,7 @@ class App extends React.Component {
       <div className={classes.wrapper}>
         <Sidebar
           routes={shareRoutes}
-          logoText={"分享快乐"}
+          logoText={"记录快乐"}
           logo={logo}
           image={image}
           handleDrawerToggle={this.handleDrawerToggle}

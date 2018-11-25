@@ -4,11 +4,12 @@ const Router = require('koa-router')
 const koaBody = require('koa-body')
 const Share = require('../model/share')
 const Category = require('../model/category')
+const { publish } = require('../bin/redisClient')
 let share = new Router()
 
-share.get('/',async (ctx,next)=>{
-    await ctx.render('index')
-})
+// share.get('/',async (ctx,next)=>{
+//     await ctx.render('index')
+// })
 
 share.get('/views/:dir/:subdir/:page',async (ctx,next)=>{
 	let {dir,subdir,page} = ctx.params
@@ -22,23 +23,33 @@ share.get('/views/:dir/:subdir/:page',async (ctx,next)=>{
 // 		res
 // 	}
 // })
-share.get(['/list','/list/:user'],async (ctx,next)=>{
-	let res  = await Category.find()
+share.all(['/share/list','/share/list/:user'],async (ctx,next)=>{
+	let { user ='' } = ctx.params  
+	let res  = await Category.find(user?{belong:user}:{publicFlag:true})
 	ctx.body = {
 		status:true,
 		res
 	}	
 })
-share.all(['/save/category'],async (ctx,next)=>{
-	let {name,belong,_id=''} = ctx.request.body || ctx.request.query,res = {};
+share.all(['/share/save/category'],async (ctx,next)=>{
+	let {name,publicFlag=true,_id=''} = ctx.request.body || ctx.request.query,res = {};
 	
 	if(_id){
 		let category = await Category.find({_id})
 		category[0].name = name;
-		category[0].belong = belong;
+		category[0].publicFlag = publicFlag;
 		res = await category[0].save()
+		publish('share-message','share-message',JSON.stringify({
+			type:'CATEGORY_MODIFY',
+			body:res
+		}))
 	}else{
-		res = await Category.save({name,belong})
+		let user = ctx.session.user
+		res = await Category.save({name,belong:user?user._id:'',publicFlag})
+		publish('share-message','share-message',JSON.stringify({
+			type:'CATEGORY_MODIFY',
+			body:res
+		}))
 	}
 	
 	ctx.body = {
@@ -46,7 +57,7 @@ share.all(['/save/category'],async (ctx,next)=>{
 		res
 	}
 })
-share.all(['/delete/category/:_id'],async (ctx,next)=>{
+share.all(['/share/delete/category/:_id'],async (ctx,next)=>{
 	let {_id} = ctx.params ,res = {};
 
 	res = await Category.delete({_id})
@@ -57,7 +68,7 @@ share.all(['/delete/category/:_id'],async (ctx,next)=>{
 	}
 })
 
-share.use(['/save/item'],koaBody({multipart: true})).all(['/save/item'],async (ctx,next)=>{
+share.use(['/share/save/item'],koaBody({multipart: true})).all(['/share/save/item'],async (ctx,next)=>{
 	if(!(ctx.request.files || ctx.request.body.files)) {
 		ctx.request.body.icon = ''
 		return await next()
@@ -79,8 +90,8 @@ share.use(['/save/item'],koaBody({multipart: true})).all(['/save/item'],async (c
 	ctx.request.body.icon = `/upload/${icon.name}`
 
 	return await next()
-}).all(['/save/item'],async (ctx,next)=>{
-	let {category,title,link,author='',privite=false,target,description='',icon='',_id=''} = ctx.request.body || ctx.request.query
+}).all(['/share/save/item'],async (ctx,next)=>{
+	let {category,title,link,public=true,target,description='',icon='',_id=''} = ctx.request.body || ctx.request.query
 	let categories = await Category.findCategory({_id:category}),res = null;
 	if(categories&&categories.length>0){
 		if(_id){
@@ -88,14 +99,14 @@ share.use(['/save/item'],koaBody({multipart: true})).all(['/save/item'],async (c
 			res = list[0]
 			res.title = title
 			res.link = link
-			res.author = author
-			res.privite = privite
+			res.public = public
 			res.target = target
 			res.description = description
 			res.icon = icon?icon:res.icon
 			await res.save()
 		}else{
-			res = await Share.save({category,title,link,author,privite,target,description,icon})
+			let user = ctx.session.user
+			res = await Share.save({category,title,link,author:user?user._id:'',public,target,description,icon})
 			categories[0].children.push(res._id)
 			await categories[0].save()
 		}
@@ -105,7 +116,7 @@ share.use(['/save/item'],koaBody({multipart: true})).all(['/save/item'],async (c
 		res
 	}
 })
-share.all(['/delete/category/:category/item/:_id'],async (ctx,next)=>{
+share.all(['/share/delete/category/:category/item/:_id'],async (ctx,next)=>{
 	let {category,_id} = ctx.params ,res = {};
 	res = await Category.deleteItem(category,_id)
 	if(res.ok){

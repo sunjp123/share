@@ -65,7 +65,7 @@ class ShareContainer extends React.Component{
     }
     saveCategory(category){
         new Promise((resolve,reject)=>{
-            this.props.fetchSaveCategory(category,resolve,reject)
+            this.props.fetchSaveCategory(this.props.match.params.page,category,resolve,reject)
         }).then(()=>{
             this.setState({
                 categoryDialog:false
@@ -149,8 +149,13 @@ class ShareContainer extends React.Component{
             }
         })
     }
+    componentWillReceiveProps(nextProps){
+        if(nextProps.match.params.page!=this.props.match.params.page){
+            this.props.fetchInitShareList(nextProps.match.params.page)
+        }
+    }
     componentDidMount(){
-        this.props.fetchInitShareList()
+        this.props.fetchInitShareList(this.props.match.params.page)
     }
     render(){
         return (
@@ -182,11 +187,11 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-    fetchInitShareList: () => {
-        dispatch(shareAction.F_SHARE_FETCH_SHARE_INIT_ACTION())
+    fetchInitShareList: (page) => {
+        dispatch(shareAction.F_SHARE_FETCH_SHARE_INIT_ACTION(page))
     },
-    fetchSaveCategory: (category,resolve,reject) => {
-        dispatch(shareAction.F_SHARE_FETCH_SAVE_SHARE_CATEGORY(category,resolve,reject))
+    fetchSaveCategory: (page,category,resolve,reject) => {
+        dispatch(shareAction.F_SHARE_FETCH_SAVE_SHARE_CATEGORY(page,category,resolve,reject))
     },
     fetchDeleteCategory: (_id,resolve,reject) => {
         dispatch(shareAction.F_SHARE_FETCH_DELETE_SHARE_CATEGORY(_id,resolve,reject))
