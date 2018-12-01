@@ -1,11 +1,12 @@
 const CategoryDb = require('../database/category');
-
+const User = require('./user')
 module.exports =  class Category {
-     static async save({name,belong,publicFlag}){
+     static async save({name,belong,publicFlag,shareFlag}){
 		 let category = new CategoryDb({
 			name,
 			belong,
-			publicFlag
+			publicFlag,
+			shareFlag
 		 })
 		 return await category.save()
 	 }
@@ -13,7 +14,18 @@ module.exports =  class Category {
 		return await CategoryDb.find(condition,opts)
 	 }
 	 static async find(condition={},opts={}){
-		return await CategoryDb.find(condition,opts).populate('children').exec()
+		const res = await CategoryDb.find(condition,opts).populate({
+			path:'children',
+			populate: {
+				path: 'author',
+				select: '-password -name -email -phone',
+				model: 'User'
+			}
+		}).exec()
+		return res;
+	 }
+	 static async findById(_id){
+		return await CategoryDb.findById(_id)
 	 }
 	 static async delete(condition){
 		 return await CategoryDb.deleteOne(condition)

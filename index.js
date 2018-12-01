@@ -23,7 +23,7 @@ const app = new Koa()
 
 const server = require('http').createServer(app.callback())
 
-const io = require('./bin/message')(socketServer(server))
+const io = require('./bin/shareMessage')(socketServer(server))
 
 
 Ejs(app,{
@@ -55,6 +55,13 @@ router.use(async (ctx,next)=>{
     }
     await next()
 })
+router.get('/view/*',async (ctx,next)=>{
+    if(ctx.request.url!='/view/public' && !ctx.session.user){
+        await ctx.response.redirect('/view/public')
+    }else{
+        await next()
+    }
+})
 router.get('',async (ctx,next)=>{
     await ctx.response.redirect('/view/public')
 })
@@ -63,7 +70,15 @@ router.get(['/view/*'],async (ctx,next)=>{
     await ctx.render('index',{__user__:JSON.stringify(ctx.session.user),__publicKey__:publicKey})
     await next()
 })
-
+router.use('/api',async (ctx,next)=>{
+    if(ctx.session.user || /(\/api\/user\/login\??){1}/.test(ctx.request.url)){
+        await next()
+    }else{
+        ctx.body = {
+            status:false
+        }	
+    }
+})
 router.use('/api',share.routes(),user.routes(),share.allowedMethods())
 
 app.use(router.routes())

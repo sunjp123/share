@@ -5,7 +5,10 @@ const koaBody = require('koa-body')
 const Share = require('../model/share')
 const Category = require('../model/category')
 const { publish } = require('../bin/redisClient')
+const { REDIS_MESSAGE } = require('../config/constConfig')
+const sharePublish = publish(REDIS_MESSAGE.SHARE_MESSAGE.KEY,REDIS_MESSAGE.SHARE_MESSAGE.EVENT)
 let share = new Router()
+
 
 // share.get('/',async (ctx,next)=>{
 //     await ctx.render('index')
@@ -32,35 +35,52 @@ share.all(['/share/list','/share/list/:user'],async (ctx,next)=>{
 	}	
 })
 share.all(['/share/save/category'],async (ctx,next)=>{
-	let {name,publicFlag=true,_id=''} = ctx.request.body || ctx.request.query,res = {};
+	let {name,publicFlag=true,shareFlag=false,_id=''} = ctx.request.body || ctx.request.query,res = {};
 	
 	if(_id){
 		let category = await Category.find({_id})
 		category[0].name = name;
 		category[0].publicFlag = publicFlag;
+		category[0].shareFlag = shareFlag;
 		res = await category[0].save()
-		publish('share-message','share-message',JSON.stringify({
+		sharePublish({
+			user:ctx.session.user._id,
 			type:'CATEGORY_MODIFY',
-			body:res
-		}))
+			body:`${ctx.session.user.name}修改了${res.name}`
+		})
 	}else{
 		let user = ctx.session.user
-		res = await Category.save({name,belong:user?user._id:'',publicFlag})
-		publish('share-message','share-message',JSON.stringify({
-			type:'CATEGORY_MODIFY',
-			body:res
-		}))
+		res = await Category.save({name,belong:user?user._id:'',publicFlag,shareFlag})
+		if(res.publicFlag){
+			sharePublish({
+				user:ctx.session.user._id,
+				type:'CATEGORY_SAVE',
+				body:`${ctx.session.user.name}创建了${res.name}`
+			})
+		}
 	}
-	
 	ctx.body = {
 		status:true,
 		res
 	}
 })
 share.all(['/share/delete/category/:_id'],async (ctx,next)=>{
-	let {_id} = ctx.params ,res = {};
-
+	let {_id} = ctx.params ,category = {},res = {};
+	category = await Category.findById(_id)
+	if(category.belong != ctx.session.user._id) {
+		return ctx.body = {
+			status:false
+		}
+	}
 	res = await Category.delete({_id})
+	if(category.publicFlag){
+		sharePublish({
+			user:ctx.session.user._id,
+			type:'CATEGORY_DELETE',
+			body:`${ctx.session.user.name}删除了${category.name}`
+		})
+	}
+    
 
 	ctx.body = {
 		status:true,

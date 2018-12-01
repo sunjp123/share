@@ -33,7 +33,7 @@
           work correctly both with client-side routing and a non-root public URL.
           Learn how to configure a non-root public URL by running `npm run build`.
         -->
-        <title>Share Any</title>
+        <title>Happy Record</title>
     </head>
     <body >
         <textarea hidden id='__PUBLIC_KEY__' readonly>
@@ -42,7 +42,7 @@
         <input type="hidden" value="<%= __user__ %>" id='__USER_INFO__' />
         <script type="text/javascript">
             window.__PUBLIC_KEY__ = document.getElementById('__PUBLIC_KEY__').value
-            window.__USER_INFO__ = JSON.parse(document.getElementById('__USER_INFO__').value)
+            window.__USER_INFO__ = document.getElementById('__USER_INFO__').value?JSON.parse(document.getElementById('__USER_INFO__').value):''
         </script>
         <noscript>
           You need to enable JavaScript to run this app.

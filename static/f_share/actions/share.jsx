@@ -25,7 +25,7 @@ const F_SHARE_DELETE_SHARE_ITEM = (category,_id)=>({
 export const F_SHARE_FETCH_SHARE_INIT_ACTION = (page)=>{
     return (dispatch/*, getState*/) => {
         fetchPost(`${API.getShareList}${page=='public'?'':('/'+window.__USER_INFO__._id)}`).then(res => res.data).then((json) => {
-            dispatch(F_SHARE_INIT_DATA_ACTION(json.res));
+            dispatch(F_SHARE_INIT_DATA_ACTION(json.res||[]));
         });
     }
 }
@@ -44,8 +44,10 @@ export const F_SHARE_FETCH_SAVE_SHARE_CATEGORY = (page,category,resolve,reject)=
 }
 export const F_SHARE_FETCH_DELETE_SHARE_CATEGORY = (category,resolve,reject)=>{
     return (dispatch) => { 
-        fetchGet(`api/share/delete/category/${category}`).then(res => res.data).then(json =>{
-            dispatch(F_SHARE_DELETE_SHARE_CATEGORY(category))
+        fetchGet(`/api/share/delete/category/${category}`).then(res => res.data).then(json =>{
+            if(json.status){
+                dispatch(F_SHARE_DELETE_SHARE_CATEGORY(category))
+            }
             resolve(json)
         }).catch(e => {
             reject(e)

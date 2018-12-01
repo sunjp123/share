@@ -1,12 +1,13 @@
 const { client } = require('./redisClient')
-module.exports = (io)=>{
+const { REDIS_MESSAGE } = require('../config/constConfig')
+module.exports = (socketServer)=>{
 
-    io.on('connect',(socket)=>{
-        
+    socketServer.on('connect',(socket)=>{
+
         const redis = client()
-
+        
         redis.on('ready',()=>{
-            redis.subscribe('share-message')
+            redis.subscribe(REDIS_MESSAGE.SHARE_MESSAGE.EVENT)
         }) 
         //监听订阅成功事件
         redis.on("subscribe", function (channel, count) {
@@ -15,8 +16,8 @@ module.exports = (io)=>{
 
         //收到消息后执行回调，message是redis发布的消息
         redis.on("message", function (channel, message) {
-            console.log(message)
-            socket.emit('share-message',message)
+
+            socket.emit(REDIS_MESSAGE.SHARE_MESSAGE.EVENT,message)
         });
 
         //监听取消订阅事件

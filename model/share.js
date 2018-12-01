@@ -8,7 +8,7 @@ module.exports = class Share {
 		return await share.save()
 	 }
 	 static async find(condition={},opts={}){
-		return await Sharedb.find(condition,opts)
+		return await Sharedb.find(condition,opts).populate(author,{select: '-password -email -phone'}).exec()
 	 }
 	 static async findByIdAndRemove(_id){
 		return await Sharedb.findByIdAndRemove(_id)

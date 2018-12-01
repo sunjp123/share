@@ -67,21 +67,33 @@ class Share extends React.Component {
                     <CardIcon color="info">
                       <Icon>{category.name}</Icon>
                     </CardIcon>
-                      <Tooltip title="添加内容">
-                      <Button variant="fab" color="inherit" aria-label="Add" className={classes.button} onClick={()=>{this.props.openAddItemDialog(category._id)}}>
-                      <AddIcon />
-                      </Button>
-                      </Tooltip>
-                      <Tooltip title="编辑分类">
-                      <Button variant="fab" color="inherit" aria-label="Edit" className={classes.button} onClick={()=>{this.props.openEditCategoryDialog(category._id,category.name)}}>
-                        <EditIcon color="action" />
-                      </Button>
-                      </Tooltip>
-                      <Tooltip title="删除分类">
-                      <Button variant="fab"  aria-label="Delete" className={classes.button} onClick={()=>{this.props.deleteCategory(category._id)}}>
-                        <DeleteIcon />
-                      </Button>
-                      </Tooltip>
+                      {
+                        window.__USER_INFO__&&(category.shareFlag||category.belong == window.__USER_INFO__._id)?(
+                          <Tooltip title="添加内容">
+                          <Button variant="fab" color="inherit" aria-label="Add" className={classes.button} onClick={()=>{this.props.openAddItemDialog(category._id)}}>
+                          <AddIcon />
+                          </Button>
+                          </Tooltip>
+                        ):null
+                      }
+                      
+                      {
+                        window.__USER_INFO__ && window.__USER_INFO__._id == category.belong?(
+                          <React.Fragment>
+                          <Tooltip title="编辑分类">
+                          <Button variant="fab" color="inherit" aria-label="Edit" className={classes.button} onClick={()=>{this.props.openEditCategoryDialog(category._id,category.name)}}>
+                            <EditIcon color="action" />
+                          </Button>
+                          </Tooltip>
+                          <Tooltip title="删除分类">
+                          <Button variant="fab"  aria-label="Delete" className={classes.button} onClick={()=>{this.props.deleteCategory(category._id)}}>
+                            <DeleteIcon />
+                          </Button>
+                          </Tooltip>
+                          </React.Fragment>
+                        ):null
+                      }
+                      
                   </CardHeader>
                   <CardBody>
                   <GridContainer>
@@ -116,7 +128,9 @@ class Share extends React.Component {
             
           })
         }
-        <GridContainer key={categories.length} addButton={true} onClick={this.props.openAddCategoryDialog}>
+        {
+          window.__USER_INFO__._id?(
+            <GridContainer key={categories.length} addButton={true} onClick={this.props.openAddCategoryDialog}>
               <GridItem xs={12} sm={12} md={12}>
                 <Card>
                   <CardHeader color="info" stats icon>
@@ -138,6 +152,9 @@ class Share extends React.Component {
                 </Card>
               </GridItem>
             </GridContainer>
+          ):null
+        }
+        
       </div>
     );
   }

@@ -15,4 +15,7 @@ module.exports =  class User {
 	 static async find(condition={},opts={}){
 		return await UserDb.find(condition,opts)
 	 }
+	 static async findById(condition={},opts){
+		return await UserDb.findById(condition,opts).exec()
+	 }
 }

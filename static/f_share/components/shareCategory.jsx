@@ -28,8 +28,15 @@ class ShareCategory extends React.Component {
     this.state = {
         category:'',
         switchLabels:[{
+          selects:['公共分享','我的收藏'],
           label:'公共分享',
           checked:true,
+          value:'public',
+          color:'primary'
+        },{
+          selects:['允许其他人添加分享','禁止其他人添加分享'],
+          label:'禁止其他人添加分享',
+          checked:false,
           value:'public',
           color:'primary'
         }]
@@ -43,7 +50,8 @@ class ShareCategory extends React.Component {
   onCategoryConfirm(){
      this.props.saveCategory({name:this.state.category||this.props.defaultValue,
       _id:this.props._id,
-      publicFlag:this.state.switchLabels[0].checked
+      publicFlag:this.state.switchLabels[0].checked,
+      shareFlag:this.state.switchLabels[1].checked,
     })
   }
   componentWillReceiveProps(nextProps){
@@ -58,7 +66,7 @@ class ShareCategory extends React.Component {
       switchLabels:this.state.switchLabels.map((switchLabel,index)=>{
           if(index == changeSwitchIndex){
             switchLabel.checked = event.target.checked
-            switchLabel.label = switchLabel.checked?'公共分享':'我的收藏'
+            switchLabel.label = switchLabel.checked?switchLabel.selects[0]:switchLabel.selects[1]
           }
           return switchLabel
       })

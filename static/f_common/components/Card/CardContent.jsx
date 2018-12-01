@@ -74,8 +74,12 @@ const styles = theme => ({
       width:'auto'
   },
   description:{
-    height:"40px",
+    height:"20px",
     overflow:'hidden'
+  },
+  author:{
+    height:"20px",
+    overflow:'hidden' 
   },
   button:{
       width:'40px',
@@ -102,15 +106,22 @@ function ComplexGrid(props) {
                 {info.title}
               </Typography>
               <Typography gutterBottom className={classes.description}>{info.description?info.description:(info.add?'':'暂无描述')}</Typography>
-              <Typography color="textSecondary">{info.author}</Typography>
+              <Typography color="textSecondary" className={classes.author}>{info.author?'记录：'+info.author.nickname:''}</Typography>
             </Grid>
             <Grid item>
-                <Tooltip title="修改内容" >
-                    <Button style={{ cursor: 'pointer' }} onMouseDown={(ev)=>{onOpenEditDialog(info);ev.nativeEvent.stopImmediatePropagation();ev.defaultPrevented;}} className={classes.button} ><EditIcon color={'action'}/></Button>
-                </Tooltip>
-                <Tooltip title="删除内容" >
-                    <Button style={{ cursor: 'pointer' }} className={classes.button} onClick={(ev)=>{deleteItem(info);ev.nativeEvent.stopPropagation();ev.nativeEvent.stopImmediatePropagation();ev.nativeEvent.preventDefault();}}><DeleteIcon color={'action'}/></Button>
-                </Tooltip>
+                {
+                  window.__USER_INFO__ && window.__USER_INFO__._id == info.author._id?(
+                    <React.Fragment>
+                       <Tooltip title="修改内容" >
+                          <Button style={{ cursor: 'pointer' }} onMouseDown={(ev)=>{onOpenEditDialog(info);ev.nativeEvent.stopImmediatePropagation();ev.defaultPrevented;}} className={classes.button} ><EditIcon color={'action'}/></Button>
+                      </Tooltip>
+                      <Tooltip title="删除内容" >
+                          <Button style={{ cursor: 'pointer' }} className={classes.button} onClick={(ev)=>{deleteItem(info);ev.nativeEvent.stopPropagation();ev.nativeEvent.stopImmediatePropagation();ev.nativeEvent.preventDefault();}}><DeleteIcon color={'action'}/></Button>
+                      </Tooltip>
+                    </React.Fragment>
+                  ):null
+                }
+               
             </Grid>
           </Grid>
           
