@@ -1,6 +1,7 @@
 import * as types from '../constants/share'
 import { fetchGet, fetchPost } from '../../public/http'
 import { API } from '../constants/api'
+import { rejects } from 'assert';
 const F_SHARE_SAVE_SHARE_CATEGORY = (category)=>({
     type:types.SAVE_SHARE_CATEGORY,
     category
@@ -33,7 +34,7 @@ export const F_SHARE_FETCH_SHARE_INIT_ACTION = (page)=>{
 export const F_SHARE_FETCH_SAVE_SHARE_CATEGORY = (page,category,resolve,reject)=>{
     return (dispatch) => { 
         fetchPost(API.saveShareCategory,category).then(res => res.data).then(json =>{
-            if(!(page=='public'&&!category.publicFlag)){
+            if(!(page=='public'&&!category.publicFlag) && json.status){
                 dispatch(F_SHARE_SAVE_SHARE_CATEGORY(json.res))
             }
             resolve(json)
@@ -57,7 +58,7 @@ export const F_SHARE_FETCH_DELETE_SHARE_CATEGORY = (category,resolve,reject)=>{
 export const F_SHARE_FETCH_SAVE_SHARE_ITEM = (item,resolve,reject)=>{
     return (dispatch) => { 
         fetchPost('/api/share/save/item',item).then(res => res.data).then(json =>{
-            json.res&&dispatch(F_SHARE_SAVE_SHARE_ITEM(json.res))
+            json.status&&dispatch(F_SHARE_SAVE_SHARE_ITEM(json.res))
             resolve(json)
         }).catch(e => {
             reject(e)
@@ -70,6 +71,26 @@ export const F_SHARE_FETCH_DELETE_SHARE_ITEM = (item,resolve,reject)=>{
             dispatch(F_SHARE_DELETE_SHARE_ITEM(item.category,item._id))
             resolve(json)
         }).catch(e => {
+            reject(e)
+        })
+    }
+}
+export const F_SHARE_FETCH_UPLOAD_FILE = (file,onUploadProgress,resolve,reject)=>{
+    return (dispatch) => {
+        fetchPost(API.fileUpload,file,{onUploadProgress}).then(res => res.data).then(json =>{
+            resolve(json)
+        }).catch(e => {
+            reject(e)
+        })
+    }
+}
+
+export const F_COMMON_FETCH_SEARCH = (params,resolve,reject)=>{
+    return (dispatch/*, getState*/) => {
+        fetchPost(`${API.getSearchList}`,params).then(res => res.data).then((json) => {
+            dispatch(F_SHARE_INIT_DATA_ACTION(json.res||[]));
+            resolve(json)
+        }).catch(e=>{
             reject(e)
         })
     }

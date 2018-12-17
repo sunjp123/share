@@ -1,5 +1,5 @@
 import * as types from '../../constants/User/userInfo'
-import { fetchPost } from '../../../public/http'
+import { fetchPost ,fetchGet} from '../../../public/http'
 import { API } from '../../constants/api'
 
 export const F_COMMON_FETCH_LOGIN_USER_ACTION = (params)=>{
@@ -44,6 +44,23 @@ export const F_COMMON_FETCH_LOGOUT_USER_ACTION = (params)=>{
             if(json.status){
                 window.location.reload()
             }
+        });
+    }
+}
+
+export const F_COMMON_FETCH_USER_MESSAGE_ACTION = (resolve,reject)=>{
+    return (dispatch/*, getState*/) => {
+        if(!window.__USER_INFO__) return 
+        fetchPost(API.getMessage).then(res => res.data).then((json) => {
+            resolve(json)
+        });
+    }
+}
+export const F_COMMON_FETCH_USER_READ_MESSAGE_ACTION = (_id,resolve,reject)=>{
+    return (dispatch/*, getState*/) => {
+        if(!window.__USER_INFO__) return 
+        fetchGet(`${API.readMessage}/${_id}`).then(res => res.data).then((json) => {
+            resolve(json)
         });
     }
 }

@@ -18,4 +18,7 @@ module.exports =  class User {
 	 static async findById(condition={},opts){
 		return await UserDb.findById(condition,opts).exec()
 	 }
+	 static async findUserMessage(_id,messages){
+		 return await UserDb.findById(_id).where('messages').in(messages).exec()
+	 }
 }

@@ -21,7 +21,8 @@ function CustomInput({ ...props }) {
     labelProps,
     inputProps,
     error,
-    success
+    success,
+    children
   } = props;
 
   const labelClasses = classNames({
@@ -36,7 +37,9 @@ function CustomInput({ ...props }) {
   const marginTop = classNames({
     [classes.marginTop]: labelText === undefined
   });
-
+  const textIndentFile = classNames({
+    [classes.textIndentFile]:inputProps.type=='file'
+  })
   return (
     <FormControl
       {...formControlProps}
@@ -55,7 +58,8 @@ function CustomInput({ ...props }) {
         classes={{
           root: marginTop,
           disabled: classes.disabled,
-          underline: underlineClasses
+          underline: underlineClasses,
+          input:textIndentFile
         }}
         id={id}
         {...inputProps}
@@ -65,6 +69,7 @@ function CustomInput({ ...props }) {
       ) : success ? (
         <Check className={classes.feedback + " " + classes.labelRootSuccess} />
       ) : null}
+      {children}
     </FormControl>
   );
 }

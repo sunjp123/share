@@ -16,6 +16,8 @@ const socketServer = require('socket.io');
 
 const share = require('./route/share');
 const user = require('./route/user');
+const file = require('./route/file');
+
 const CONFIG = require('./config/sessionConfig')
 const publicKey = fs.readFileSync('./rsa_1024_pub.pem').toString()
 
@@ -79,7 +81,8 @@ router.use('/api',async (ctx,next)=>{
         }	
     }
 })
-router.use('/api',share.routes(),user.routes(),share.allowedMethods())
+
+router.use('/api',share.routes(),user.routes(),file.routes(),share.allowedMethods())
 
 app.use(router.routes())
 

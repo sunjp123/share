@@ -63,6 +63,9 @@ const customInputStyle = {
     margin: "0 0 0 0",
     position: "relative"
   }
+  ,textIndentFile:{
+    'text-indent':'-200px'
+  }
 };
 
 export default customInputStyle;

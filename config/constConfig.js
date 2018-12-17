@@ -7,3 +7,9 @@ const REDIS_MESSAGE = {
 }
 
 exports.REDIS_MESSAGE = REDIS_MESSAGE
+
+const HAPPY_RECORD = {
+    HOST_URL:'http://localhost:3001'
+}
+
+exports.HAPPY_RECORD = HAPPY_RECORD

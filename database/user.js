@@ -7,7 +7,9 @@ const ShareSchema = new Schema({
 	      nickname: String,
 	      avator:   String,
 		  email: String,
-		  phone: String
+		  phone: String,
+		  date:{ type: Date, default: Date.now },
+		  messages:[{type:Schema.Types.ObjectId,ref:'Message'}]
 	    });
 
 module.exports =  mongoose.model('User', ShareSchema);

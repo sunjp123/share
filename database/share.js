@@ -6,7 +6,7 @@ const ShareSchema = new Schema({
 	      link:   String,
 	      comments: [{ 
 			  body: String, 
-			  date: Date,
+			  date: { type: Date, default: Date.now },
 			  user:{type: Schema.Types.ObjectId, ref: 'User'}
 		  }],
 		  icon:String,

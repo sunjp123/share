@@ -37,8 +37,8 @@ class Share extends React.Component {
 		 value: 0
 	  }
   }
-  onOpenEditDialog(category,item){
-    this.props.openEditItemDialog(category,item)
+  onOpenEditDialog(item){
+    this.props.openEditItemDialog(item)
   }
   deleteItem(category,item){
     this.props.deleteItem(category,item)
@@ -101,7 +101,7 @@ class Share extends React.Component {
                       category.children&&category.children.map((item,index)=>{
                          return (
                            
-                            <CardContent key={index} deleteItem={()=>{this.deleteItem(category._id,item)}} onOpenEditDialog={()=>this.onOpenEditDialog(category._id,item)} info={{...item,img:'../../public/icon/logo.svg'}} xs={4} sm={2} md={1}/>
+                            <CardContent key={index} deleteItem={()=>{this.deleteItem(category._id,item)}} onOpenEditDialog={()=>this.onOpenEditDialog(item)} info={{...item,img:'../../public/icon/logo.svg'}} xs={4} sm={2} md={1}/>
                           
                          )
                       })

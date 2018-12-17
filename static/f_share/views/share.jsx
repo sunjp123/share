@@ -21,7 +21,7 @@ class ShareContainer extends React.Component{
             categoryDialog:false,
             itemDialog:{
                 open:false,
-                title:'添加项目',
+                dialogTitle:'添加项目',
                 category:'',
                 item:null
             },
@@ -64,12 +64,15 @@ class ShareContainer extends React.Component{
         })
     }
     saveCategory(category){
-        new Promise((resolve,reject)=>{
+        return new Promise((resolve,reject)=>{
             this.props.fetchSaveCategory(this.props.match.params.page,category,resolve,reject)
-        }).then(()=>{
-            this.setState({
-                categoryDialog:false
-            })
+        }).then((json)=>{
+            if(json.status){
+                this.setState({
+                    categoryDialog:false
+                })
+            }
+            return json
         }).catch((e)=>{
             console.error(e)
         })
@@ -95,34 +98,38 @@ class ShareContainer extends React.Component{
             itemDialog:{
                 ...this.state.itemDialog,
                 open:true,
-                title:'添加项目',
-                category
+                dialogTitle:'添加项目',
+                category,
+                item:''
             }
         })
     }
-    openEditItemDialog(category,item){
+    openEditItemDialog(item){
         this.setState({
             itemDialog:{
                 ...this.state.itemDialog,
                 open:true,
-                title:'修改项目',
+                dialogTitle:'修改项目',
                 item,
-                category
+                category:item.category
             }
         })
     }
     saveItem(item){
-        new Promise((resolve,reject)=>{
+        return new Promise((resolve,reject)=>{
             this.props.fetchSaveItem(item,resolve,reject)
-        }).then(()=>{
-            this.setState({
-                itemDialog:{
-                    ...this.state.itemDialog,
-                    open:false
-                }
-            })
+        }).then((json)=>{
+            if(json.status){
+                this.setState({
+                    itemDialog:{
+                        ...this.state.itemDialog,
+                        open:false
+                    }
+                })
+            }
+            return json 
         }).catch((e)=>{
-            console.error(e)
+            return Promise.reject(e)
         })
     }
     deleteItem(category,item){
@@ -171,6 +178,7 @@ class ShareContainer extends React.Component{
                 <ShareItemComponent 
                     cancelItem={this.cancelItem} 
                     saveItem={this.saveItem}
+                    fetchUploadFile={this.props.fetchUploadFile}
                     open = {this.state.itemDialog.open}
                     {...this.state.itemDialog} 
                     {...this.props} />
@@ -201,6 +209,9 @@ const mapDispatchToProps = (dispatch) => ({
     },
     fetchDeleteItem:(item,resolve,reject) => {
         dispatch(shareAction.F_SHARE_FETCH_DELETE_SHARE_ITEM(item,resolve,reject))
+    },
+    fetchUploadFile:(file,onUploadProgress,resolve,reject) => {
+        dispatch(shareAction.F_SHARE_FETCH_UPLOAD_FILE(file,onUploadProgress,resolve,reject))
     }    
 })
 
