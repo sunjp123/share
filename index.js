@@ -32,7 +32,7 @@ Ejs(app,{
     root:path.join(__dirname,'./static'),
     layout:'',
     viewExt: 'html',
-    cache: false,
+    cache: true,
     debug: false
 })
 
@@ -87,7 +87,10 @@ router.use('/api',share.routes(),user.routes(),file.routes(),share.allowedMethod
 app.use(router.routes())
 
 app.use(Static(
-    path.join( __dirname, './static')
+    path.join( __dirname, './static'),{
+        maxAge:365*3600*24,
+        gzip:true
+    }
 ))
 
 app.use(Logger())
