@@ -3,10 +3,11 @@
 const path = require('path');
 const args = require('minimist')(process.argv.slice(2));
 const webpack = require('webpack');
+const TerserPlugin = require('terser-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 module.exports = {
   devtool: 'inline-source-map',
-  mode: "development", 
+  mode: args.env, 
 
   entry: {
 		main:path.resolve(__dirname, "./static/index.js") // string | object | array
@@ -83,15 +84,28 @@ module.exports = {
     ]
 	},
 	optimization: {
+			minimize: true,
 			runtimeChunk: {
 					name: "manifest"
 			},
 			splitChunks: {
 					cacheGroups: {
-							commons: {
-									test: /[\\/]node_modules[\\/]/,
-									name: "vendor",
-									chunks: "all"
+							// commons: {
+							// 		test: /[\\/]node_modules[\\/]/,
+							// 		name: "vendor",
+							// 		chunks: "all"
+							// },
+							libs: {
+								name: "chunk-vendor",
+								test: /[\\/]node_modules[\\/]/,
+								priority: 10,
+								chunks: "initial" // 只打包初始时依赖的第三方
+							},
+							materialUI: {
+								name: "chunk-ui", // 单独将 ui 拆包
+								priority: 20, // 权重要大于 libs 和 app 不然会被打包进 libs 或者 app
+								test: /[\\/]node_modules[\\/].?material-ui[\\/]/,
+								chunks: "all"
 							}
 					}
 			}
@@ -106,5 +120,5 @@ module.exports = {
 				})
 				//,
 				//new BundleAnalyzerPlugin({analyzerMode:"static"})
-  ]
+	]
 }
