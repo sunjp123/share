@@ -10,6 +10,7 @@ const Message = require('../model/message')
 const validate = require('../util/validate')
 const sendCaptcha = require('../bin/sms')
 const privateKey = fs.readFileSync('./rsa_1024_priv.pem').toString()
+const redis = require('../bin/redis')
 let userRouter = new Router()
 
 
@@ -19,7 +20,7 @@ userRouter.all('/user/captcha', async (ctx, next) => {
         height: 40
     }
     const captcha = svgCaptcha.create({
-        ignoreChars: '0o1i',
+        ignoreChars: '0o1il',
         width: 70,
         height: 30,
         fontSize:36,
@@ -32,9 +33,26 @@ userRouter.all('/user/captcha', async (ctx, next) => {
 
 userRouter.all('/user/send',async (ctx, next) => {
     let { phone , captcha='' } = ctx.request.body;
+    let redisKey = await redis.get('captcha-'+phone)
+    if(redisKey.value!=null){
+        return ctx.body = {
+            status: false,
+            type:'SEND_REPEAT',
+            msg:'短信已发送'
+        }
+    }
     if(typeof captcha == 'string' && ctx.session.captcha.toUpperCase() == captcha.toUpperCase()){
         let phoneCaptcha = (Math.random()*1000000).toString().replace('.','').substr(0,6),exCaptcha = '000000'
-        let ret = await sendCaptcha(phone,[phoneCaptcha+exCaptcha.substr(0,6-phoneCaptcha.length),1])
+        let captchaCode = phoneCaptcha+exCaptcha.substr(0,6-phoneCaptcha.length)
+        let ret = await sendCaptcha(phone,[captchaCode,1])
+        if(!ret.err && ret.resData.result==0){
+            redis.set('captcha-'+phone,sendCaptcha,60)
+            return ctx.body = {
+                status: true,
+                type:'SEND_SUCCESS',
+                msg:ret.resData
+            }
+        }
         return ctx.body = {
             status: true,
             type:'SEND_ERROR',
@@ -64,9 +82,7 @@ userRouter.all('/user/login', async (ctx, next) => {
     password = decrypt.decrypt(password);
     condition = { password: password }
 
-    if (validate.isEmail(contact)) {
-        condition = { ...condition, email: contact }
-    } else if (validate.isPhone(contact)) {
+    if (validate.isPhone(contact)) {
         condition = { ...condition, phone: contact }
     } else {
         condition = { ...condition, nickname: contact }
@@ -115,8 +131,14 @@ userRouter.use(['/user/register', '/user/modify'], koaBody({ multipart: true }))
 
     return await next()
 }).all('/user/register', async (ctx, next) => {
-    let { name, nickname, contact, password, avator } = ctx.request.body, condition = {}, res = '', isEmail = false;
-
+    let { name, nickname, contact, password, avator , phoneCaptcha} = ctx.request.body, condition = {}, res = '', isEmail = false;
+    let redisKey = await redis.get('captcha-'+phone)
+    if(phoneCaptcha!=redisKey.value){
+        return ctx.body = {
+            status: false,
+            type: 'CAPTCHA_ERROR'
+        }
+    }
     if (!contact || !password || !name || !nickname) {
         return ctx.body = {
             status: false,

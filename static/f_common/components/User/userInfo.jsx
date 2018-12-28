@@ -39,11 +39,11 @@ const dialogStyle = {
     }
 }
 class InputValue {
-  constructor(labelText,placeholder,onChange,type='text'){
+  constructor(labelText,placeholder,eventCallback,check,type='text'){
     this.labelText = labelText
     this.inputProps = {
       placeholder:placeholder,
-      onChange:onChange,
+      onChange:this.onChange(eventCallback,check),
       value:'',
     }
     if(type == 'file'){
@@ -61,6 +61,12 @@ class InputValue {
     this.error = false
     this.success = false
   }
+  onChange(eventCallback,check){
+     return (ev)=>{
+        eventCallback(ev)
+        check&&check()
+     }
+  }
 }
 class UserInfo extends React.Component {
   constructor(props){
@@ -77,15 +83,31 @@ class UserInfo extends React.Component {
     this.onPhoneCaptchaChange = this.onPhoneCaptchaChange.bind(this)
     this.refreshCaptcha = this.refreshCaptcha.bind(this)
     this.onSendPhoneCaptcha = this.onSendPhoneCaptcha.bind(this)
+    this.onCheck = this.onCheck.bind(this)
+    this.count = 60;
+    this.timer = null;
     this.state = {
-        name:new InputValue('姓名','请填写真实姓名',this.onNameChange),
-        nickname:new InputValue('昵称','昵称',this.onNicknameChange),
+        name:new InputValue('姓名','请填写真实姓名',this.onNameChange,this.onCheck),
+        nickname:new InputValue('昵称','昵称',this.onNicknameChange,this.onCheck),
         avator:new InputValue('头像','头像',this.onAvatorChange,'file'),
-        contact:new InputValue('联系方式','请输入有效手机',this.onContactChange),
-        captcha:new InputValue('验证码','请输入验证码',this.onCaptchaChange),
-        phoneCaptcha:new InputValue('手机验证码','请输手机入验证码',this.onPhoneCaptchaChange),
-        password:new InputValue('密码','6位以上，字母+数字+特殊字符如sun@123',this.onPasswordChange),
-        captchaRandom:Math.random()
+        contact:new InputValue('联系方式','请输入有效手机',this.onContactChange,this.onCheck),
+        captcha:Object.assign(new InputValue('验证码','请输入验证码',this.onCaptchaChange),{sent:false,btname:'发送',count:60}),
+        phoneCaptcha:new InputValue('手机验证码','请输手机入验证码',this.onPhoneCaptchaChange,this.onCheck),
+        password:new InputValue('密码','6位以上，字母+数字+特殊字符如sun@123',this.onPasswordChange,this.onCheck),
+        captchaRandom:Math.random(),
+        canregister:false
+    }
+  }
+  onCheck(){
+    let {name,nickname,contact,password,phoneCaptcha} = this.state;
+    if(name.success && nickname.success && contact.success && password.success && phoneCaptcha.success){
+      this.setState({
+        canregister:true
+      })
+    }else{
+      this.setState({
+        canregister:false
+      })
     }
   }
   onNameChange(ev) {
@@ -192,14 +214,43 @@ class UserInfo extends React.Component {
     })
   }
   onSendPhoneCaptcha(){
+    let { captcha ,contact} = this.state
     const params = {
-       phone:this.state.contact.inputProps.value,
-       captcha:this.state.captcha.inputProps.value
+       phone:contact.inputProps.value,
+       captcha:captcha.inputProps.value
     }
-    console.error(params)
+    
     fetchPost(API.sendPhoneCaptcha,params).then(json=>json.data).then(json=>{
       if(json.status){
-         console.log(json.msg)
+         this.setState({
+            captcha:{
+              ...captcha,
+              sent:true
+            }
+         },()=>{
+          this.timer = setInterval(()=>{
+              this.setState({
+                  captcha:{
+                    ...captcha,
+                    sent:true,
+                    btname:`${this.count--}s`
+                  }
+              })
+            if(this.count == 0){
+              clearInterval(this.timer)
+              this.count = 60;
+              this.setState({
+                  captcha:{
+                    ...captcha,
+                    btname:'发送',
+                    sent:false
+                  },
+                  captchaRandom:Math.random()
+              })
+            }
+          },1000)
+         })
+         
       }else{
         console.log(json.msg)
       }
@@ -321,7 +372,7 @@ class UserInfo extends React.Component {
                     {className:'item-form'}
                   }  
                   {...this.state.captcha}/>
-                  <CustomButton disabled={!(this.state.captcha.success&&this.state.contact.success)}  className={classes.captchaBtn +' '+ (this.state.captcha.success&&this.state.contact.success?classes.captchaBtnEnAble:'')} onClick={this.onSendPhoneCaptcha} >发送</CustomButton>
+                  <CustomButton disabled={!(this.state.captcha.success&&this.state.contact.success&&!this.state.captcha.sent)}  className={classes.captchaBtn +' '+ (this.state.captcha.success&&this.state.contact.success&&!this.state.captcha.sent?classes.captchaBtnEnAble:'')} onClick={this.onSendPhoneCaptcha} >{this.state.captcha.btname}</CustomButton>
               </div>
             <CustomInput id={'user-item-dialog-phoneCaptcha'}
                 formControlProps={
@@ -340,7 +391,7 @@ class UserInfo extends React.Component {
                 {...this.state.avator}/>
         </DialogContent>
         <DialogActionComponent>
-          <Button onClick={this.onItemConfirm} >{userInfo?'确定':'注册'}</Button>
+          <Button onClick={this.onItemConfirm} disabled={!this.state.canregister}>{userInfo?'确定':'注册'}</Button>
           <Button onClick={this.onItemCancel} >取消</Button>
         </DialogActionComponent>
       </React.Fragment>
