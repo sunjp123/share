@@ -40,6 +40,7 @@ class UserInfo extends React.Component {
         nickname:new InputValue('昵称','昵称',userInfo.nickname,this.onNicknameChange),
         avator:new InputValue('头像','头像','',this.onAvatorChange,'file'),
         contact:new InputValue('联系方式','请输入有效手机或邮箱',userInfo.email||userInfo.phone,this.onContactChange),
+        captcha:new InputValue('验证码','请输入验证码','',this.onContactChange),
         password:new InputValue('密码','6位以上，字母+数字+特殊字符如sun@123','',this.onPasswordChange)
     }
   }
@@ -188,6 +189,11 @@ class UserInfo extends React.Component {
                   {className:'item-form'}
                 }  
                 {...this.state.contact}/>
+            <CustomInput id={'user-item-dialog-captcha'}
+                formControlProps={
+                  {className:'item-form'}
+                }  
+                {...this.state.captcha}/>
             <CustomInput id={'user-item-dialog-password'}
                 formControlProps={
                   {className:'item-form'}

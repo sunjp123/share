@@ -5,5 +5,6 @@ export const  API = {
     loginUser:`${API_ROOT}user/login`,
     logoutUser:`${API_ROOT}user/logout`,
     getMessage:`${API_ROOT}user/message`,
-    readMessage:`${API_ROOT}user/read`
+    readMessage:`${API_ROOT}user/read`,
+    sendPhoneCaptcha:`${API_ROOT}user/send`
 }

@@ -8,7 +8,12 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 module.exports = {
   devtool: 'inline-source-map',
   mode: args.env, 
-
+	watch:args.env=='production'?false:true,
+	watchOptions: {
+		aggregateTimeout: 300,
+		poll: 1000,
+		ignored: /(node_modules|dist)/
+	},
   entry: {
 		main:path.resolve(__dirname, "./static/index.js") // string | object | array
 	},

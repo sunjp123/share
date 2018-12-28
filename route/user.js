@@ -3,13 +3,52 @@ const fs = require('fs')
 const path = require('path')
 const Router = require('koa-router')
 const koaBody = require('koa-body')
+const svgCaptcha = require('svg-captcha')
 const { JSEncrypt } = require('jsencrypt')
 const User = require('../model/user')
 const Message = require('../model/message')
 const validate = require('../util/validate')
+const sendCaptcha = require('../bin/sms')
 const privateKey = fs.readFileSync('./rsa_1024_priv.pem').toString()
 let userRouter = new Router()
 
+
+userRouter.all('/user/captcha', async (ctx, next) => {
+    svgCaptcha.options = {
+        width: 40,
+        height: 40
+    }
+    const captcha = svgCaptcha.create({
+        ignoreChars: '0o1i',
+        width: 70,
+        height: 30,
+        fontSize:36,
+        color: false 
+    })
+    ctx.session.captcha =  captcha.text
+    ctx.type = 'svg'
+    return ctx.body = captcha.data
+})
+
+userRouter.all('/user/send',async (ctx, next) => {
+    let { phone , captcha='' } = ctx.request.body;
+    if(typeof captcha == 'string' && ctx.session.captcha.toUpperCase() == captcha.toUpperCase()){
+        let phoneCaptcha = (Math.random()*1000000).toString().replace('.','').substr(0,6),exCaptcha = '000000'
+        let ret = await sendCaptcha(phone,[phoneCaptcha+exCaptcha.substr(0,6-phoneCaptcha.length),1])
+        return ctx.body = {
+            status: true,
+            type:'SEND_ERROR',
+            msg:ret.resData
+        }
+        
+    }else{
+        return ctx.body = {
+            status: false,
+            type:'CAPTCHA_ERROR',
+            msg:'验证码错误'
+        }
+    }
+})
 
 userRouter.all('/user/login', async (ctx, next) => {
     let { contact, password } = ctx.request.body, condition = {};

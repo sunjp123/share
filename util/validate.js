@@ -28,4 +28,10 @@ module.exports = class Validate {
     static isMatchReg(value,regexp){
         return (this.regexp || regexp || /.*/).test(value)
     }
+    static isCaptcha(value){
+        return /^[\w]{4}$/.test(value)
+    }
+    static isPhoneCaptcha(value){
+        return /^[\d]{6}$/.test(value)
+    }
 }

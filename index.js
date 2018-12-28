@@ -73,7 +73,7 @@ router.get(['/view/*'],async (ctx,next)=>{
     await next()
 })
 router.use('/api',async (ctx,next)=>{
-    if(ctx.session.user || /(\/api\/user\/login\??){1}/.test(ctx.request.url)){
+    if(ctx.session.user || /(\/api\/user\/(?:login|register|captcha|send)\??|\/api\/share\/list\??){1}/.test(ctx.request.url)){
         await next()
     }else{
         ctx.body = {

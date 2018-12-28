@@ -1,25 +1,41 @@
 import React from "react";
 import { JSEncrypt } from "jsencrypt"
+import { fetchPost } from "../../../public/http"
+import { API } from "../../constants/api"
 
 import withStyles from "@material-ui/core/styles/withStyles";
 // @material-ui/core
-import Input from "@material-ui/core/Input";
+
 import Button from "@material-ui/core/Button";
 // @material-ui/icons
 // import Cloud from "@material-ui/icons/Cloud";
 
 // core components
-import DialogComponent from "../Dialog/Dialog";
-import DialogTitleComponent from "../Dialog/DialogTitle";
 import DialogContent from "../Dialog/DialogContent";
 import DialogActionComponent from "../Dialog/DialogAction";
 import CustomInput from "../CustomInput/CustomInput";
-
+import CustomButton from "../CustomButtons/Button"
 import validate from "../../../../util/validate"
 
 const dialogStyle = {
     paper:{
       width:"500px"
+    },
+    captchaBox:{
+       display:"flex"
+    },
+    captchaImg:{
+      width:'70px',
+    },
+    captchaBtn:{
+      width:'60px',
+      marginLeft:'10px'
+    },
+    captchaBtnEnAble:{
+      background:'#26c6da',
+      "&:hover":{
+        background:'#00acc1',
+      }
     }
 }
 class InputValue {
@@ -57,13 +73,19 @@ class UserInfo extends React.Component {
     this.setFieldValue = this.setFieldValue.bind(this)
     this.onItemConfirm = this.onItemConfirm.bind(this)
     this.onItemCancel = this.onItemCancel.bind(this)
-
+    this.onCaptchaChange = this.onCaptchaChange.bind(this)
+    this.onPhoneCaptchaChange = this.onPhoneCaptchaChange.bind(this)
+    this.refreshCaptcha = this.refreshCaptcha.bind(this)
+    this.onSendPhoneCaptcha = this.onSendPhoneCaptcha.bind(this)
     this.state = {
         name:new InputValue('姓名','请填写真实姓名',this.onNameChange),
         nickname:new InputValue('昵称','昵称',this.onNicknameChange),
         avator:new InputValue('头像','头像',this.onAvatorChange,'file'),
-        contact:new InputValue('联系方式','请输入有效手机或邮箱',this.onContactChange),
-        password:new InputValue('密码','6位以上，字母+数字+特殊字符如sun@123',this.onPasswordChange)
+        contact:new InputValue('联系方式','请输入有效手机',this.onContactChange),
+        captcha:new InputValue('验证码','请输入验证码',this.onCaptchaChange),
+        phoneCaptcha:new InputValue('手机验证码','请输手机入验证码',this.onPhoneCaptchaChange),
+        password:new InputValue('密码','6位以上，字母+数字+特殊字符如sun@123',this.onPasswordChange),
+        captchaRandom:Math.random()
     }
   }
   onNameChange(ev) {
@@ -147,6 +169,59 @@ class UserInfo extends React.Component {
       password
     })
   }
+  onCaptchaChange(ev){
+    const value = ev.target.value
+    const success = validate.isCaptcha(value)
+
+    const captcha = {
+        ...this.state.captcha,
+      inputProps:{
+          ...this.state.captcha.inputProps,
+          value:ev.target.value
+      },
+      error:!success,
+      success
+    }
+    this.setState({
+      captcha
+    })
+  }
+  refreshCaptcha(){
+    this.setState({
+      captchaRandom:Math.random()
+    })
+  }
+  onSendPhoneCaptcha(){
+    const params = {
+       phone:this.state.contact.inputProps.value,
+       captcha:this.state.captcha.inputProps.value
+    }
+    console.error(params)
+    fetchPost(API.sendPhoneCaptcha,params).then(json=>json.data).then(json=>{
+      if(json.status){
+         console.log(json.msg)
+      }else{
+        console.log(json.msg)
+      }
+    })
+  }
+  onPhoneCaptchaChange(ev){
+    const value = ev.target.value
+    const success = validate.isPhoneCaptcha(value)
+
+    const phoneCaptcha = {
+        ...this.state.phoneCaptcha,
+      inputProps:{
+          ...this.state.phoneCaptcha.inputProps,
+          value:ev.target.value
+      },
+      error:!success,
+      success
+    }
+    this.setState({
+      phoneCaptcha
+    })
+  }
   onItemConfirm(){
 
      let formData = new FormData(),encrypt = new JSEncrypt();
@@ -155,6 +230,7 @@ class UserInfo extends React.Component {
       name:this.state.name.inputProps.value,
       nickname:this.state.nickname.inputProps.value,
       contact:this.state.contact.inputProps.value,
+      phoneCaptcha:this.state.phoneCaptcha.inputProps.value,
       avator:this.state.avator.inputProps.file,
       password:encrypt.encrypt(this.state.password.inputProps.value),
     };
@@ -216,7 +292,7 @@ class UserInfo extends React.Component {
     }
   }
   render() {
-    const { userInfo } = this.props;
+    const { userInfo ,classes} = this.props;
     return (
 
       <React.Fragment>
@@ -237,6 +313,21 @@ class UserInfo extends React.Component {
                   {className:'item-form'}
                 }  
                 {...this.state.contact}/>
+              <div className={classes.captchaBox} >
+                  
+                  <CustomButton className={classes.captchaImg} justIcon color="transparent" onClick={this.refreshCaptcha} ><img width="70px" src={'/api/user/captcha?v='+this.state.captchaRandom} /></CustomButton>
+                  <CustomInput id={'user-item-dialog-captcha'}
+                  formControlProps={
+                    {className:'item-form'}
+                  }  
+                  {...this.state.captcha}/>
+                  <CustomButton disabled={!(this.state.captcha.success&&this.state.contact.success)}  className={classes.captchaBtn +' '+ (this.state.captcha.success&&this.state.contact.success?classes.captchaBtnEnAble:'')} onClick={this.onSendPhoneCaptcha} >发送</CustomButton>
+              </div>
+            <CustomInput id={'user-item-dialog-phoneCaptcha'}
+                formControlProps={
+                  {className:'item-form'}
+                }  
+                {...this.state.phoneCaptcha}/>
             <CustomInput id={'user-item-dialog-password'}
                 formControlProps={
                   {className:'item-form'}
