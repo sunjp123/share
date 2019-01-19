@@ -2,7 +2,7 @@ import socketClient from 'socket.io-client';
 
 export default class SokcetServer {
     constructor({events}){
-        this.client = new socketClient()
+        this.client = new socketClient({path:'/share/socket.io'})
         if(!this.client){
             return null
         }

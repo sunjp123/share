@@ -45,7 +45,7 @@ export const F_SHARE_FETCH_SAVE_SHARE_CATEGORY = (page,category,resolve,reject)=
 }
 export const F_SHARE_FETCH_DELETE_SHARE_CATEGORY = (category,resolve,reject)=>{
     return (dispatch) => { 
-        fetchGet(`/api/share/delete/category/${category}`).then(res => res.data).then(json =>{
+        fetchGet(`/share/api/share/delete/category/${category}`).then(res => res.data).then(json =>{
             if(json.status){
                 dispatch(F_SHARE_DELETE_SHARE_CATEGORY(category))
             }
@@ -57,7 +57,7 @@ export const F_SHARE_FETCH_DELETE_SHARE_CATEGORY = (category,resolve,reject)=>{
 }
 export const F_SHARE_FETCH_SAVE_SHARE_ITEM = (item,resolve,reject)=>{
     return (dispatch) => { 
-        fetchPost('/api/share/save/item',item).then(res => res.data).then(json =>{
+        fetchPost('/share/api/share/save/item',item).then(res => res.data).then(json =>{
             json.status&&dispatch(F_SHARE_SAVE_SHARE_ITEM(json.res))
             resolve(json)
         }).catch(e => {
@@ -67,7 +67,7 @@ export const F_SHARE_FETCH_SAVE_SHARE_ITEM = (item,resolve,reject)=>{
 }
 export const F_SHARE_FETCH_DELETE_SHARE_ITEM = (item,resolve,reject)=>{
     return (dispatch) => {
-        fetchGet(`/api/share/delete/category/${item.category}/item/${item._id}`).then(res => res.data).then(json =>{
+        fetchGet(`/share/api/share/delete/category/${item.category}/item/${item._id}`).then(res => res.data).then(json =>{
             dispatch(F_SHARE_DELETE_SHARE_ITEM(item.category,item._id))
             resolve(json)
         }).catch(e => {

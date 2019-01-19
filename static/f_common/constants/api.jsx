@@ -1,4 +1,4 @@
-const API_ROOT = '/api/'
+const API_ROOT = '/share/api/'
 export const  API = {
     addUser:`${API_ROOT}user/register`,
     modifyUser:`${API_ROOT}user/modify`,

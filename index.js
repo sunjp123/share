@@ -25,7 +25,7 @@ const app = new Koa()
 
 const server = require('http').createServer(app.callback())
 
-const io = require('./bin/shareMessage')(socketServer(server))
+const io = require('./bin/shareMessage')(socketServer(server,{path:'/share/socket.io'}))
 
 
 Ejs(app,{
@@ -57,22 +57,22 @@ router.use(async (ctx,next)=>{
     }
     await next()
 })
-router.get('/view/*',async (ctx,next)=>{
-    if(ctx.request.url!='/view/public' && !ctx.session.user){
-        await ctx.response.redirect('/view/public')
+router.get('/share/view/*',async (ctx,next)=>{
+    if(ctx.request.url!='/share/view/public' && !ctx.session.user){
+        await ctx.response.redirect('/share/view/public')
     }else{
         await next()
     }
 })
-router.get('',async (ctx,next)=>{
-    await ctx.response.redirect('/view/public')
+router.get('/share',async (ctx,next)=>{
+    await ctx.response.redirect('/share/view/public')
 })
 
-router.get(['/view/*'],async (ctx,next)=>{
+router.get(['/share/view/*'],async (ctx,next)=>{
     await ctx.render('index',{__user__:JSON.stringify(ctx.session.user),__publicKey__:publicKey})
     await next()
 })
-router.use('/api',async (ctx,next)=>{
+router.use('/share/api',async (ctx,next)=>{
     if(ctx.session.user || /(\/api\/user\/(?:login|register|captcha|send)\??|\/api\/share\/list\??){1}/.test(ctx.request.url)){
         await next()
     }else{
@@ -82,7 +82,7 @@ router.use('/api',async (ctx,next)=>{
     }
 })
 
-router.use('/api',share.routes(),user.routes(),file.routes(),share.allowedMethods())
+router.use('/share/api',share.routes(),user.routes(),file.routes(),share.allowedMethods())
 
 app.use(router.routes())
 
