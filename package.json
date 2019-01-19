@@ -4,7 +4,8 @@
   "description": "share",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index",
+    "startdev":"nodemon index --env=development",
+    "start": "nodemon index --env=production",
     "dist": "webpack --config webpack.config.js  --progress --env=production",
     "dev": "webpack --config webpack.config.js  --progress  --env=development"
   },
