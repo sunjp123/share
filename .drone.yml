@@ -1,0 +1,11 @@
+workspace:
+  base: /usr/src/project
+  path: .
+
+pipeline:
+  build:  # Build go app and package source files
+    images:node
+    commands:
+        - cd share
+        - npm run dist
+    
