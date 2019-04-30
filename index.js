@@ -58,7 +58,6 @@ router.use(async (ctx,next)=>{
     await next()
 })
 router.get('/share/view/*',async (ctx,next)=>{
-	console.log("123")
     if(ctx.request.url!='/share/view/public' && !ctx.session.user){
         await ctx.response.redirect('/share/view/public')
     }else{
