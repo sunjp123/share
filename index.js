@@ -32,7 +32,7 @@ Ejs(app,{
     root:path.join(__dirname,'./static'),
     layout:'',
     viewExt: 'html',
-    cache: false,
+    cache: true,
     debug: false
 })
 
