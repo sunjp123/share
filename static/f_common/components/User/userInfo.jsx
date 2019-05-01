@@ -366,7 +366,7 @@ class UserInfo extends React.Component {
                 {...this.state.contact}/>
               <div className={classes.captchaBox} >
                   
-                  <CustomButton className={classes.captchaImg} justIcon color="transparent" onClick={this.refreshCaptcha} ><img width="70px" src={'/api/user/captcha?v='+this.state.captchaRandom} /></CustomButton>
+                  <CustomButton className={classes.captchaImg} justIcon color="transparent" onClick={this.refreshCaptcha} ><img width="70px" src={'/share/api/user/captcha?v='+this.state.captchaRandom} /></CustomButton>
                   <CustomInput id={'user-item-dialog-captcha'}
                   formControlProps={
                     {className:'item-form'}
