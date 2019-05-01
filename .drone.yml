@@ -6,6 +6,7 @@ pipeline:
   build:  # Build go app and package source files
     image: node
     commands:
+        - npm i
         - npm run dist
   publish:  # Build image and publish to private registry
     image: plugins/docker
