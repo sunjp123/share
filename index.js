@@ -28,6 +28,7 @@ const server = require('http').createServer(app.callback())
 const io = require('./bin/shareMessage')(socketServer(server,{path:'/share/socket.io'}))
 
 
+
 Ejs(app,{
     root:path.join(__dirname,'./static'),
     layout:'',
