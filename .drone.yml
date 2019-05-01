@@ -4,8 +4,23 @@ workspace:
 
 pipeline:
   build:  # Build go app and package source files
-    images:node
+    image: node
     commands:
-        - cd share
         - npm run dist
+  publish:  # Build image and publish to private registry
+    image: plugins/docker
+    repo: sunjp123/share
+    secrets: [ docker_username, docker_password ]
+    dockerfile: ./cicd/Dockerfile
+    default_tags: true
+  deploy: 
+    image: appleboy/drone-ssh
+    host:
+        happyrecord.cn
+    username: root
+    port: 22
+    secrets: [ ssh_password ]
+    script:
+        - cd /usr/src/project
+        - /bin/bash run.sh
     
