@@ -3,7 +3,7 @@ workspace:
   path: .
 
 pipeline:
-  build:  # Build go app and package source files
+  build:  # Build
     image: node
     commands:
         - npm i
