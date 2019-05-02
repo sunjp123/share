@@ -12,7 +12,7 @@ pipeline:
     image: plugins/docker
     registry: http://registry.happyrecord.cn:5000
     repo: registry.happyrecord.cn:5000/sunjp123/share
-    secrets: [ docker_username, docker_password ]
+    #secrets: [ docker_username, docker_password ]
     dockerfile: ./cicd/Dockerfile
     default_tags: true
   deploy: 
