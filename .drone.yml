@@ -10,8 +10,8 @@ pipeline:
         - npm run dist
   publish:  # Build image and publish to private registry
     image: plugins/docker
-    registry: http://registry.happyrecord.cn
-    repo: sunjp123/share
+    registry: http://registry.happyrecord.cn:5000
+    repo: registry.happyrecord.cn:5000/sunjp123/share
     secrets: [ docker_username, docker_password ]
     dockerfile: ./cicd/Dockerfile
     default_tags: true
