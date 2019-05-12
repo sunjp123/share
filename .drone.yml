@@ -22,7 +22,7 @@ pipeline:
     username: root
     port: 22
     secrets: [ ssh_key ]
-    command_timeout: 120s
+    command_timeout: 1200s
     script:
         - cd /usr/src/project
         - /bin/bash run.sh
