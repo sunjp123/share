@@ -4,10 +4,11 @@
   "description": "share",
   "main": "index.js",
   "scripts": {
-    "startdev":"nodemon index --env=development",
+    "startdev": "nodemon index --env=development",
     "start": "nodemon index --env=production",
     "dist": "webpack --config webpack.config.js  --progress --env=production",
-    "dev": "webpack --config webpack.config.js  --progress  --env=development"
+    "dev": "webpack --config webpack.config.js  --progress  --env=development",
+    "check":"checkrc start -ae"
   },
   "author": "sjp",
   "license": "ISC",
@@ -77,6 +78,7 @@
     "yarn": "^1.12.3"
   },
   "devDependencies": {
+    "checkrc": "^1.0.3",
     "webpack-cli": "^3.1.2"
   }
 }
