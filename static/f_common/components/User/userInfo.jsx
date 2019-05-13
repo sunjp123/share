@@ -63,8 +63,7 @@ class InputValue {
   }
   onChange(eventCallback,check){
      return (ev)=>{
-        eventCallback(ev)
-        check&&check()
+        eventCallback(ev,check)
      }
   }
 }
@@ -110,7 +109,7 @@ class UserInfo extends React.Component {
       })
     }
   }
-  onNameChange(ev) {
+  onNameChange(ev,check = ()=>{}) {
      const value = ev.target.value
      const success = /^[\u4E00-\u9FA5]+$/.test(value) || /^[a-zA-Z]+$/.test(value)
      const name = {
@@ -124,9 +123,11 @@ class UserInfo extends React.Component {
      }
      this.setState({
        name
+     },()=>{
+       check()
      })
   }
-  onNicknameChange(ev) {
+  onNicknameChange(ev,check = ()=>{}) {
     const success = !!ev.target.value
     const nickname = {
         ...this.state.nickname,
@@ -139,9 +140,11 @@ class UserInfo extends React.Component {
     }
     this.setState({
       nickname
+    },()=>{
+      check()
     })
  }
- onContactChange(ev) {
+ onContactChange(ev,check = ()=>{}) {
     const value = ev.target.value
     const success = validate.isEmail(value) || validate.isPhone(value)
 
@@ -156,6 +159,8 @@ class UserInfo extends React.Component {
     }
     this.setState({
       contact
+    },()=>{
+      check()
     })
   }
   onAvatorChange(ev){
@@ -174,7 +179,7 @@ class UserInfo extends React.Component {
       avator
     })
   }
-  onPasswordChange(ev){
+  onPasswordChange(ev,check = ()=>{}){
     const value = ev.target.value
     const success = validate.isPassword(value)
 
@@ -189,9 +194,11 @@ class UserInfo extends React.Component {
     }
     this.setState({
       password
+    },()=>{
+       check()
     })
   }
-  onCaptchaChange(ev){
+  onCaptchaChange(ev,check = ()=>{}){
     const value = ev.target.value
     const success = validate.isCaptcha(value)
 
@@ -206,6 +213,8 @@ class UserInfo extends React.Component {
     }
     this.setState({
       captcha
+    },()=>{
+      check()
     })
   }
   refreshCaptcha(){
