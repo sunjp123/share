@@ -78,30 +78,28 @@ userRouter.all('/user/login', async (ctx, next) => {
         }
     }
 
-    bcrypt.genSalt(10, function(err, salt) {
-        bcrypt.hash(password, salt, async function(err, hash) {
-            console.log(hash)
-            condition = { password: hash }
+    if (validate.isPhone(contact)) {
+        condition = { phone: contact }
+    } else {
+        condition = { nickname: contact }
+    }
+    let res = await User.find(condition)
+    console.log('compare:',bcrypt.compareSync(password,res[0].password))
+    if (!res || res.length <= 0) {
+        return ctx.body = {
+            status: false
+        }
+    } else if(bcrypt.compareSync(password,res[0].password)){
 
-            if (validate.isPhone(contact)) {
-                condition = { ...condition, phone: contact }
-            } else {
-                condition = { ...condition, nickname: contact }
-            }
-            let res = await User.find(condition, { password: 0 })
-
-            if (!res || res.length <= 0) {
-                return ctx.body = {
-                    status: false
-                }
-            } else {
-                ctx.session.user = res[0]
-                return ctx.body = {
-                    status: true
-                }
-            }
-        });
-    });
+        ctx.session.user = {...res[0],password:''}
+        return ctx.body = {
+            status: true
+        }
+    }else{
+        return ctx.body = {
+            status: false
+        }
+    }
     
 })
 
