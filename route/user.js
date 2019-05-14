@@ -9,6 +9,7 @@ const User = require('../model/user')
 const Message = require('../model/message')
 const validate = require('../util/validate')
 const sendCaptcha = require('../bin/sms')
+const bcrypt = require('bcrypt')
 const privateKey = fs.readFileSync('./rsa_1024_priv.pem').toString()
 const redis = require('../bin/redis')
 let userRouter = new Router()
@@ -77,28 +78,31 @@ userRouter.all('/user/login', async (ctx, next) => {
         }
     }
 
-    let decrypt = new JSEncrypt();
-    decrypt.setPrivateKey(privateKey);
-    password = decrypt.decrypt(password);
-    condition = { password: password }
+    bcrypt.genSalt(10, function(err, salt) {
+        bcrypt.hash(password, salt, async function(err, hash) {
+            console.log(hash)
+            condition = { password: hash }
 
-    if (validate.isPhone(contact)) {
-        condition = { ...condition, phone: contact }
-    } else {
-        condition = { ...condition, nickname: contact }
-    }
-    let res = await User.find(condition, { password: 0 })
+            if (validate.isPhone(contact)) {
+                condition = { ...condition, phone: contact }
+            } else {
+                condition = { ...condition, nickname: contact }
+            }
+            let res = await User.find(condition, { password: 0 })
 
-    if (!res || res.length <= 0) {
-        return ctx.body = {
-            status: false
-        }
-    } else {
-        ctx.session.user = res[0]
-        return ctx.body = {
-            status: true
-        }
-    }
+            if (!res || res.length <= 0) {
+                return ctx.body = {
+                    status: false
+                }
+            } else {
+                ctx.session.user = res[0]
+                return ctx.body = {
+                    status: true
+                }
+            }
+        });
+    });
+    
 })
 
 userRouter.all('/user/logout', async (ctx, next) => {
@@ -181,22 +185,23 @@ userRouter.use(['/user/register', '/user/modify'], koaBody({ multipart: true }))
     }
 
 
-    let decrypt = new JSEncrypt();
-    decrypt.setPrivateKey(privateKey);
-    password = decrypt.decrypt(password);
-
-    res = await User.save({ name, nickname, password, avator, email: isEmail ? contact : '', phone: !isEmail ? contact : '' })
-    if (!res) {
-        return ctx.body = {
-            status: false,
-            type: 'SAVE_ERROR'
-        }
-    } else {
-        ctx.session.user = res
-        return ctx.body = {
-            status: true,
-        }
-    }
+    bcrypt.genSalt(10, function(err, salt) {
+        bcrypt.hash(password, salt, async function(err, hash) {
+            console.log(hash)
+            res = await User.save({ name, nickname, password:hash, avator, email: isEmail ? contact : '', phone: !isEmail ? contact : '' })
+            if (!res) {
+                return ctx.body = {
+                    status: false,
+                    type: 'SAVE_ERROR'
+                }
+            } else {
+                ctx.session.user = res
+                return ctx.body = {
+                    status: true,
+                }
+            }
+        });
+    });
 })
 
 userRouter.all('/user/modify', async (ctx, next) => {
@@ -243,31 +248,31 @@ userRouter.all('/user/modify', async (ctx, next) => {
         }
     }
 
-
-    let decrypt = new JSEncrypt();
-    decrypt.setPrivateKey(privateKey);
-    password = decrypt.decrypt(password);
-    res = await User.find({ _id })
-
-    if (!res || res.length <= 0) {
-        return ctx.body = {
-            status: false,
-            type: 'MODIFY_ERROR'
-        }
-    } else if (res && res.length > 0) {
-        let user = Object.assign(res[0], {
-            name,
-            nickname,
-            password,
-            avator: avator ? avator : res[0].avator,
-            email: isEmail ? contact : '', phone: !isEmail ? contact : ''
-        })
-        await user.save();
-        ctx.session.user = res[0]
-        return ctx.body = {
-            status: true,
-        }
-    }
+    bcrypt.genSalt(10, function(err, salt) {
+        bcrypt.hash(password, salt, async function(err, hash) {
+            console.log(hash)
+            res = await User.find({ _id })
+            if (!res || res.length <= 0) {
+                return ctx.body = {
+                    status: false,
+                    type: 'MODIFY_ERROR'
+                }
+            } else if (res && res.length > 0) {
+                let user = Object.assign(res[0], {
+                    name,
+                    nickname,
+                    password:hash,
+                    avator: avator ? avator : res[0].avator,
+                    email: isEmail ? contact : '', phone: !isEmail ? contact : ''
+                })
+                await user.save();
+                ctx.session.user = res[0]
+                return ctx.body = {
+                    status: true,
+                }
+            }
+        });
+    });    
 })
 
 userRouter.all('/user/message', async (ctx, next) => {

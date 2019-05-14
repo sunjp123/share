@@ -284,15 +284,14 @@ class UserInfo extends React.Component {
   }
   onItemConfirm(){
 
-     let formData = new FormData(),encrypt = new JSEncrypt();
-     encrypt.setPublicKey(window.__PUBLIC_KEY__);
+     let formData = new FormData();
      let params = {
       name:this.state.name.inputProps.value,
       nickname:this.state.nickname.inputProps.value,
       contact:this.state.contact.inputProps.value,
       phoneCaptcha:this.state.phoneCaptcha.inputProps.value,
       avator:this.state.avator.inputProps.file,
-      password:encrypt.encrypt(this.state.password.inputProps.value),
+      password:this.state.password.inputProps.value,
     };
 
     Object.entries(params).map(item=>{
