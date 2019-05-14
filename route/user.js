@@ -132,7 +132,7 @@ userRouter.use(['/user/register', '/user/modify'], koaBody({ multipart: true }))
     return await next()
 }).all('/user/register', async (ctx, next) => {
     let { name, nickname, contact, password, avator , phoneCaptcha} = ctx.request.body, condition = {}, res = '', isEmail = false;
-    let redisKey = await redis.get('captcha-'+phone)
+    let redisKey = await redis.get('captcha-'+contact)
     if(phoneCaptcha!=redisKey.value){
         return ctx.body = {
             status: false,
