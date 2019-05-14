@@ -46,7 +46,7 @@ userRouter.all('/user/send',async (ctx, next) => {
         let captchaCode = phoneCaptcha+exCaptcha.substr(0,6-phoneCaptcha.length)
         let ret = await sendCaptcha(phone,[captchaCode,1])
         if(!ret.err && ret.resData.result==0){
-            redis.set('captcha-'+phone,sendCaptcha,60)
+            redis.set('captcha-'+phone,captchaCode,60)
             return ctx.body = {
                 status: true,
                 type:'SEND_SUCCESS',
