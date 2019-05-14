@@ -183,23 +183,21 @@ userRouter.use(['/user/register', '/user/modify'], koaBody({ multipart: true }))
     }
 
 
-    bcrypt.genSalt(10, function(err, salt) {
-        bcrypt.hash(password, salt, async function(err, hash) {
-            console.log(hash)
-            res = await User.save({ name, nickname, password:hash, avator, email: isEmail ? contact : '', phone: !isEmail ? contact : '' })
-            if (!res) {
-                return ctx.body = {
-                    status: false,
-                    type: 'SAVE_ERROR'
-                }
-            } else {
-                ctx.session.user = res
-                return ctx.body = {
-                    status: true,
-                }
-            }
-        });
-    });
+    let salt = bcrypt.genSaltSync(10);
+    let hash = bcrypt.hashSync(password,salt);
+
+    res = await User.save({ name, nickname, password:hash, avator, email: isEmail ? contact : '', phone: !isEmail ? contact : '' })
+    if (!res) {
+        return ctx.body = {
+            status: false,
+            type: 'SAVE_ERROR'
+        }
+    } else {
+        ctx.session.user = res
+        return ctx.body = {
+            status: true,
+        }
+    }
 })
 
 userRouter.all('/user/modify', async (ctx, next) => {
