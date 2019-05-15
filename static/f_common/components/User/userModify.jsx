@@ -283,7 +283,7 @@ class UserInfo extends React.Component {
     this.props.onCancel()
   }
   render() {
-    const { userInfo } = this.props;
+    const { userInfo , classes} = this.props;
     return (
 
       <React.Fragment>
