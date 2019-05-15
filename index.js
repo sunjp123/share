@@ -61,6 +61,10 @@ router.use(async (ctx,next)=>{
 // router.get('/share/dist/*',async (ctx,next)=>{
 //     await ctx.response.redirect(ctx.originalUrl.replace('/share',''))
 // })
+router.get('/login/weixin',async (ctx,next)=>{
+    console.log('login weixin')
+    next()
+})
 router.get('/share/view/*',async (ctx,next)=>{
     if(ctx.request.url!='/share/view/public' && !ctx.session.user){
         await ctx.response.redirect('/share/view/public')
