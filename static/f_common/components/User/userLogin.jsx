@@ -86,13 +86,9 @@ class UserInfo extends React.Component {
   }
 
   onItemConfirm(){
-    let encrypt = new JSEncrypt();
-    encrypt.setPublicKey(window.__PUBLIC_KEY__);
-    let password = encrypt.encrypt('wangyan520@');
-
     let params = {
         contact:this.state.contact.inputProps.value,
-        password
+        password:this.state.password.inputProps.value
     };
     this.props.fetchLoginUser(params)
   }
