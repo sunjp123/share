@@ -17,7 +17,7 @@ import shareRoutes from "../../route/home.jsx";
 import dashboardStyle from "../../assets/jss/material-dashboard-react/layouts/dashboardStyle.jsx";
 
 import image from "../../assets/img/sidebar-2.jpg";
-import logo from "../../assets/icon/logo.svg";
+import logo from "../../assets/icon/logo.png";
 
 const switchRoutes = (
   <Switch>

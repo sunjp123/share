@@ -1,6 +1,6 @@
 
 export default class Notifications {
-    constructor({icon = 'https://happyrecord.cn/share/assets/icon/logo.svg',title='记录快乐',body='记录你遇到的快乐！'}){
+    constructor({icon = 'https://happyrecord.cn/share/assets/icon/logo.png',title='记录快乐',body='记录你遇到的快乐！'}){
         this.icon = icon;
         if(window.Notification){
             //判断当前页面是否被允许发出通知
