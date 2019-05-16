@@ -1,6 +1,6 @@
 
 export default class Notifications {
-    constructor({icon = '/share/assets/icon/logo.svg',title='记录快乐',body='记录你遇到的快乐！'}){
+    constructor({icon = 'https://happyrecord.cn/share/assets/icon/logo.svg',title='记录快乐',body='记录你遇到的快乐！'}){
         this.icon = icon;
         if(window.Notification){
             //判断当前页面是否被允许发出通知
@@ -15,6 +15,6 @@ export default class Notifications {
     showNotify(params={}){
         if(Notification.permission!='granted') return false
         const {title='记录快乐',body='记录你遇到的快乐！',icon} = params;
-        return new Notification(title,{body,icon:icon || this.icon,renotify:true,tag:Math.random()})
+        return new Notification(title,{body,icon:icon || this.icon,image:icon || this.icon,renotify:true,tag:Math.random()})
     }
 }
