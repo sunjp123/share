@@ -91,7 +91,7 @@ userRouter.all('/user/login', async (ctx, next) => {
         }
     } else if(bcrypt.compareSync(password,res[0].password)){
 
-        ctx.session.user = {...res[0],password:''}
+        ctx.session.user = {nickname:res[0].nickname,_id:res[0]._id}
         return ctx.body = {
             status: true
         }
@@ -244,31 +244,29 @@ userRouter.all('/user/modify', async (ctx, next) => {
         }
     }
 
-    bcrypt.genSalt(10, function(err, salt) {
-        bcrypt.hash(password, salt, async function(err, hash) {
-            console.log(hash)
-            res = await User.find({ _id })
-            if (!res || res.length <= 0) {
-                return ctx.body = {
-                    status: false,
-                    type: 'MODIFY_ERROR'
-                }
-            } else if (res && res.length > 0) {
-                let user = Object.assign(res[0], {
-                    name,
-                    nickname,
-                    password:hash,
-                    avator: avator ? avator : res[0].avator,
-                    email: isEmail ? contact : '', phone: !isEmail ? contact : ''
-                })
-                await user.save();
-                ctx.session.user = res[0]
-                return ctx.body = {
-                    status: true,
-                }
-            }
-        });
-    });    
+    const salt = bcrypt.genSaltSync(10);
+    const hash = bcrypt.hash(password, salt);
+    
+    res = await User.find({ _id })
+    if (!res || res.length <= 0) {
+        return ctx.body = {
+            status: false,
+            type: 'MODIFY_ERROR'
+        }
+    } else if (res && res.length > 0) {
+        let user = Object.assign(res[0], {
+            name,
+            nickname,
+            password:hash,
+            avator: avator ? avator : res[0].avator,
+            email: isEmail ? contact : '', phone: !isEmail ? contact : ''
+        })
+        await user.save();
+        ctx.session.user = res[0]
+        return ctx.body = {
+            status: true,
+        }
+    }
 })
 
 userRouter.all('/user/message', async (ctx, next) => {
