@@ -38,7 +38,8 @@ function CustomInput({ ...props }) {
     [classes.marginTop]: labelText === undefined
   });
   const textIndentFile = classNames({
-    [classes.textIndentFile]:inputProps.type=='file'
+    [classes.textIndentFile]:inputProps.type=='file',
+    [classes.commonInput]:true
   })
   return (
     <FormControl
@@ -54,6 +55,10 @@ function CustomInput({ ...props }) {
           {labelText}
         </InputLabel>
       ) : null}
+      <label className={classes.inputWrapLabel}>
+        {
+          inputProps.type=='file'?<span className={classes.inputText}>{inputProps.value}</span>:""
+        }
       <Input
         classes={{
           root: marginTop,
@@ -63,7 +68,7 @@ function CustomInput({ ...props }) {
         }}
         id={id}
         {...inputProps}
-      />
+      /></label>
       {error ? (
         <Clear className={classes.feedback + " " + classes.labelRootError} />
       ) : success ? (

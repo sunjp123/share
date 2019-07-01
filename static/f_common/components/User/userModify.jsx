@@ -14,7 +14,7 @@ import DialogTitleComponent from "../Dialog/DialogTitle";
 import DialogContent from "../Dialog/DialogContent";
 import DialogActionComponent from "../Dialog/DialogAction";
 import CustomInput from "../CustomInput/CustomInput";
-
+import CustomButton from "../CustomButtons/Button"
 import validate from "../../../../util/validate"
 import InputValue from "./user"
 const dialogStyle = {

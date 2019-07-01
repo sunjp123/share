@@ -12,10 +12,7 @@ export default class InputValue {
       type:'file',
       file:'',
       inputProps:{
-        accept:'image/*',
-        style:{
-          "textIndent":"-200px"
-        }
+        accept:'image/*'
       }}
     }
     this.error = false

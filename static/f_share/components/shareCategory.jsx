@@ -26,6 +26,7 @@ class ShareCategory extends React.Component {
   constructor(props) {
     super(props)
     this.onCategoryChange = this.onCategoryChange.bind(this)
+    this.onBgImageChange = this.onBgImageChange.bind(this)
     this.onCategoryConfirm = this.onCategoryConfirm.bind(this)
     this.onChangeSwitchLabel = this.onChangeSwitchLabel.bind(this)
     this.state = {
@@ -60,6 +61,11 @@ class ShareCategory extends React.Component {
       category
     })
   }
+  onBgImageChange(ev) {
+      this.setState({
+        bgImage:ev.target.files[0]
+      }) 
+  }
   onCategoryConfirm() {
     let category = this.state.category
     if (!category.check()) {
@@ -68,12 +74,19 @@ class ShareCategory extends React.Component {
       })
       return
     }
-    this.props.saveCategory({
+    let formData = new FormData(), params = {
+      bgImage: this.state.bgImage,
       name: this.state.category.value || this.props.defaultValue,
       _id: this.props._id,
       publicFlag: this.state.switchLabels[0].checked,
-      shareFlag: this.state.switchLabels[1].checked,
-    }).then((json) => {
+      shareFlag: this.state.switchLabels[1].checked
+    };
+
+    Object.entries(params).map(item => {
+      // formData.append(item[0],item[1])
+      formData.append.apply(formData, item)
+    })
+    this.props.saveCategory(formData).then((json) => {
       if (!json.status) {
         if (json.res.error == 'name') {
           let category = this.state.category
@@ -105,7 +118,7 @@ class ShareCategory extends React.Component {
     })
   }
   render() {
-    const { classes, title, open } = this.props;
+    const { classes, title, open } = this.props ,{bgimage} = this.state;
     const customInput = {
       formControlProps: {
         className: 'category-form'
@@ -131,6 +144,21 @@ class ShareCategory extends React.Component {
         </DialogTitleComponent>
         <DialogContent>
           <CustomInput {...customInput} />
+          <CustomInput 
+            formControlProps= {{
+              className: 'category-form'
+            }}
+            id={'share-category-bgimage'}
+            labelText={'类下项目默认背景'}
+            inputProps={{
+              "aria-label": "category",
+              placeholder: '默认背景',
+              type: 'file',
+              inputProps: {
+                accept: 'image/*'
+              },
+              onChange: this.onBgImageChange
+            }} />
           <SwitchLabels switchLabels={this.state.switchLabels} onChange={this.onChangeSwitchLabel} />
         </DialogContent>
         <DialogActionComponent>

@@ -52,10 +52,7 @@ class InputValue {
       type:'file',
       file:'',
       inputProps:{
-        accept:'image/*',
-        style:{
-          "textIndent":"-200px"
-        }
+        accept:'image/*'
       }}
     }
     this.error = false
@@ -88,7 +85,7 @@ class UserInfo extends React.Component {
     this.state = {
         name:new InputValue('姓名','请填写真实姓名',this.onNameChange,this.onCheck),
         nickname:new InputValue('昵称','昵称',this.onNicknameChange,this.onCheck),
-        avator:new InputValue('头像','头像',this.onAvatorChange,'file'),
+        avator:new InputValue('头像','头像',this.onAvatorChange,()=>{},'file'),
         contact:new InputValue('联系方式','请输入有效手机',this.onContactChange,this.onCheck),
         captcha:Object.assign(new InputValue('验证码','请输入验证码',this.onCaptchaChange),{sent:false,btname:'发送',count:60}),
         phoneCaptcha:new InputValue('手机验证码','请输手机入验证码',this.onPhoneCaptchaChange,this.onCheck),

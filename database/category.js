@@ -5,6 +5,7 @@ const categorySchema = new Schema({
 		name:  String,
 		publicFlag: Boolean,
 		shareFlag: Boolean,
+		bgImage:String,
 		children:[{type: Schema.Types.ObjectId, ref: 'Share'}],
 		belong:{type: Schema.Types.ObjectId, ref: 'User'},
 		date: { type: Date, default: Date.now }

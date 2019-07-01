@@ -101,7 +101,7 @@ class Share extends React.Component {
                       category.children&&category.children.map((item,index)=>{
                          return (
                            
-                            <CardContent key={index} deleteItem={()=>{this.deleteItem(category._id,item)}} onOpenEditDialog={()=>this.onOpenEditDialog(item)} info={{...item,img:'/share/public/icon/logo.svg'}} xs={4} sm={2} md={1}/>
+                            <CardContent key={index} deleteItem={()=>{this.deleteItem(category._id,item)}} onOpenEditDialog={()=>this.onOpenEditDialog(item)} info={{...item,img:category.bgImage||'/share/public/icon/logo.svg'}} xs={4} sm={2} md={1}/>
                           
                          )
                       })

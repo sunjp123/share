@@ -30,12 +30,14 @@ class UserInfo extends React.Component {
     this.onItemConfirm = this.onItemConfirm.bind(this)
     this.onItemCancel = this.onItemCancel.bind(this)
 
+    this.onKeyDown = this.onKeyDown.bind(this)
     this.state = {
         contact:{
             labelText:'手机、邮箱或昵称',
             inputProps:{
                 placeholder:'请填写有效的手机、邮箱或昵称',
                 onChange:this.onContactChange,
+                onKeyDown:this.onKeyDown,
                 value:'',
             },
             error:false,
@@ -47,6 +49,7 @@ class UserInfo extends React.Component {
                 placeholder:'请填写密码',
                 type:'password',
                 onChange:this.onPasswordChange,
+                onKeyDown:this.onKeyDown,
                 value:'',
             },
             error:false,
@@ -84,12 +87,17 @@ class UserInfo extends React.Component {
         password
     })
   }
-
+  onKeyDown(e){
+    if(e.keyCode == 13){
+      this.onItemConfirm()
+    }
+  }
   onItemConfirm(){
     let params = {
         contact:this.state.contact.inputProps.value,
         password:this.state.password.inputProps.value
     };
+    if(!params.contact || !params.password) return
     this.props.fetchLoginUser(params)
   }
   onItemCancel(){

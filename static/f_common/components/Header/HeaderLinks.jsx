@@ -137,7 +137,7 @@ class HeaderLinks extends React.Component {
           </Button>
         </div>
         <NavLink
-          to={'/view/public'}
+          to={'/share/view/public'}
           activeStyle={{
             color: window.innerWidth > 959 ? "#555555" : "white"
           }}

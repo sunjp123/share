@@ -19,7 +19,7 @@ const user = require('./route/user');
 const file = require('./route/file');
 
 const CONFIG = require('./config/sessionConfig')
-const publicKey = fs.readFileSync('./rsa_1024_pub.pem').toString()
+// const publicKey = fs.readFileSync('./rsa_1024_pub.pem').toString()
 
 const app = new Koa()
 
@@ -80,7 +80,7 @@ router.get('/share',async (ctx,next)=>{
 })
 
 router.get(['/share/view/*'],async (ctx,next)=>{
-    await ctx.render('index',{__user__:JSON.stringify(ctx.session.user),__publicKey__:publicKey})
+    await ctx.render('index',{__user__:JSON.stringify(ctx.session.user)})
     await next()
 })
 router.use('/share/api',async (ctx,next)=>{

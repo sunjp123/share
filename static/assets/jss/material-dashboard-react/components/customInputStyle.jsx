@@ -4,7 +4,12 @@ import {
   successColor,
   defaultFont
 } from "../../material-dashboard-react.jsx";
-
+const placeholderHidden = {
+  opacity: 0
+};
+const placeholderVisible = {
+  opacity:  0.5
+};
 const customInputStyle = {
   disabled: {
     "&:before": {
@@ -64,7 +69,49 @@ const customInputStyle = {
     position: "relative"
   }
   ,textIndentFile:{
-    'text-indent':'-200px'
+    visibility:'hidden'
+  },
+  commonInput:{
+    'label[data-shrink=false] + label &': {
+      '&::-webkit-input-placeholder': placeholderHidden,
+      '&::-moz-placeholder': placeholderHidden,
+      // Firefox 19+
+      '&:-ms-input-placeholder': placeholderHidden,
+      // IE 11
+      '&::-ms-input-placeholder': placeholderHidden,
+      // Edge
+      '&:focus::-webkit-input-placeholder': placeholderVisible,
+      '&:focus::-moz-placeholder': placeholderVisible,
+      // Firefox 19+
+      '&:focus:-ms-input-placeholder': placeholderVisible,
+      // IE 11
+      '&:focus::-ms-input-placeholder': placeholderVisible // Edge
+
+    }
+  },
+  inputWrapLabel:{
+    position:'relative',
+    flex:'1 1 auto',
+    marginTop:'16px',
+    display:'inline-flex',
+    flexDirection:'column',
+    whiteSpace:'nowrap',
+    overflow:'hidden',
+    textOverflow:'ellipsis',
+    '& input':{
+      paddingRight:'40px'
+    }
+  },
+  inputText:{
+    position:'absolute',
+    bottom:'0',
+    top:'0',
+    left:0,
+    lineHeight:'2.42857',
+    right:'40px',
+    whiteSpace:'nowrap',
+    overflow:'hidden',
+    textOverflow:'ellipsis',
   }
 };
 

@@ -35,8 +35,30 @@ share.all(['/share/list','/share/list/:user'],async (ctx,next)=>{
 		res
 	}	
 })
-share.all(['/share/save/category'],async (ctx,next)=>{
-	let {name,publicFlag=true,shareFlag=false,_id=''} = ctx.request.body || ctx.request.query,res = {} , categories = null;
+share.use(['/share/save/category'],koaBody({multipart: true})).all(['/share/save/category'],async (ctx,next)=>{
+	if(!(ctx.request.files || ctx.request.body.files)) {
+		ctx.request.body.bgImage = '/upload/default.png'
+		return await next()
+	}
+
+	let {bgImage} = ctx.request.files || ctx.request.body.files
+	if(!bgImage || !bgImage.path) {
+		ctx.request.body.bgImage = '/upload/default.png'
+		return await next()
+	}
+	// 创建可读流
+	const reader = fs.createReadStream(bgImage.path) ,time = Date.parse(new Date());
+	let filePath = path.join(__dirname, '../static/upload/') + `${time + bgImage.name}`;
+	// 创建可写流
+	const upStream = fs.createWriteStream(filePath);
+	// 可读流通过管道写入可写流
+	reader.pipe(upStream);
+
+	ctx.request.body.bgImage = `/upload/${time + bgImage.name}`
+
+	return await next()
+}).all(['/share/save/category'],async (ctx,next)=>{
+	let {name,publicFlag=true,shareFlag=false,_id='',bgImage=""} = ctx.request.body || ctx.request.query,res = {} , categories = null;
 	if(_id){
 		categories = await Category.find({name,belong:ctx.session.user._id,$nor:[{_id}]})
 	}else{
@@ -55,6 +77,7 @@ share.all(['/share/save/category'],async (ctx,next)=>{
 		category[0].name = name;
 		category[0].publicFlag = publicFlag;
 		category[0].shareFlag = shareFlag;
+		category[0].bgImage = bgImage ? bgImage : category[0].bgImage;
 		res = await category[0].save()
 		sharePublish({
 			user:ctx.session.user._id,
@@ -63,7 +86,7 @@ share.all(['/share/save/category'],async (ctx,next)=>{
 		})
 	}else{
 		let user = ctx.session.user
-		res = await Category.save({name,belong:user?user._id:'',publicFlag,shareFlag})
+		res = await Category.save({name,belong:user?user._id:'',publicFlag,shareFlag,bgImage:bgImage})
 		if(res.publicFlag){
 			sharePublish({
 				user:ctx.session.user._id,
