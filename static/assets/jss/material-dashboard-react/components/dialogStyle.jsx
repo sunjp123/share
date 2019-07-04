@@ -1,7 +1,6 @@
 const dialogStyle = {
-    paper:{
-        // width:"600px",
-        // overflow:"hidden"
+    paperScrollPaper:{
+        flex:'1 1 auto'
     }
 }
   

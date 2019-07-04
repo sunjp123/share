@@ -22,29 +22,57 @@ import CardIcon from "../../f_common/components/Card/CardIcon.jsx";
 import CardBody from "../../f_common/components/Card/CardBody.jsx";
 import CardContent from "../../f_common/components/Card/CardContent.jsx";
 import CardFooter from "../../f_common/components/Card/CardFooter.jsx";
-import {  Button , Tooltip } from "@material-ui/core";
+import DialogAlert from "../../f_common/components/Dialog/DialogAlert.jsx"
+import { Button, Tooltip } from "@material-ui/core";
 
 
 import dashboardStyle from "../../assets/jss/material-dashboard-react/views/dashboardStyle.jsx";
 
 
 class Share extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props)
     this.onOpenEditDialog = this.onOpenEditDialog.bind(this)
     this.deleteItem = this.deleteItem.bind(this)
-	  this.state = {
-		 value: 0
-	  }
+    this.handleDeleteConfirm = this.handleDeleteConfirm.bind(this)
+    this.handleDeleteCancel = this.handleDeleteCancel.bind(this)
+    this.state = {
+      value: 0,
+      dialog: {
+        category: null,
+        item: null,
+        open: false,
+        title: '确认窗口',
+        content: '是否确认删除',
+        handleClose: this.handleDeleteCancel,
+        handleConfirm: this.handleDeleteConfirm
+      }
+    }
   }
-  onOpenEditDialog(item){
+  handleDeleteConfirm() {
+    const { dialog } = this.state;
+    this.props.deleteItem(dialog.category, dialog.item)
+    this.handleDeleteCancel()
+  }
+  handleDeleteCancel(){
+    this.setState({ dialog: { ...this.state.dialog, open: false } }) 
+  }
+  onOpenEditDialog(item) {
     this.props.openEditItemDialog(item)
   }
-  deleteItem(category,item){
-    this.props.deleteItem(category,item)
+  deleteItem(category, item) {
+    this.setState({
+
+      dialog: {
+        ...this.state.dialog,
+        category: category,
+        item: item,
+        open: true,
+      }
+    })
   }
-  componentWillReceiveProps(nextProps){
-    
+  componentWillReceiveProps(nextProps) {
+
   }
   handleChange = (event, value) => {
     this.setState({ value });
@@ -54,97 +82,97 @@ class Share extends React.Component {
     this.setState({ value: index });
   };
   render() {
-    const { classes , share} = this.props,categories = share.get('categories')||[]
+    const { classes, share } = this.props, categories = share.get('categories') || [], { dialog } = this.state;
     return (
       <div className={classes.container}>
         {
-          categories.map((category,index)=>{
+          categories.map((category, index) => {
             return (
               <GridContainer key={index} >
-              <GridItem xs={12} sm={12} md={12}>
-                <Card>
-                  <CardHeader color="info" stats icon>
-                    <CardIcon color="info">
-                      <Icon>{category.name}</Icon>
-                    </CardIcon>
+                <GridItem xs={12} sm={12} md={12}>
+                  <Card>
+                    <CardHeader color="info" stats icon>
+                      <CardIcon color="info">
+                        <Icon>{category.name}</Icon>
+                      </CardIcon>
                       {
-                        window.__USER_INFO__&&(category.shareFlag||category.belong == window.__USER_INFO__._id)?(
+                        window.__USER_INFO__ && (category.shareFlag || category.belong == window.__USER_INFO__._id) ? (
                           <Tooltip title="添加内容">
-                          <Button variant="fab" color="inherit" aria-label="Add" className={classes.button} onClick={()=>{this.props.openAddItemDialog(category._id)}}>
-                          <AddIcon />
-                          </Button>
+                            <Button variant="fab" color="inherit" aria-label="Add" className={classes.button} onClick={() => { this.props.openAddItemDialog(category._id) }}>
+                              <AddIcon />
+                            </Button>
                           </Tooltip>
-                        ):null
+                        ) : null
                       }
-                      
-                      {
-                        window.__USER_INFO__ && window.__USER_INFO__._id == category.belong?(
-                          <React.Fragment>
-                          <Tooltip title="编辑分类">
-                          <Button variant="fab" color="inherit" aria-label="Edit" className={classes.button} onClick={()=>{this.props.openEditCategoryDialog(category._id,category.name)}}>
-                            <EditIcon color="action" />
-                          </Button>
-                          </Tooltip>
-                          <Tooltip title="删除分类">
-                          <Button variant="fab"  aria-label="Delete" className={classes.button} onClick={()=>{this.props.deleteCategory(category._id)}}>
-                            <DeleteIcon />
-                          </Button>
-                          </Tooltip>
-                          </React.Fragment>
-                        ):null
-                      }
-                      
-                  </CardHeader>
-                  <CardBody>
-                  <GridContainer>
-                    {
-                      category.children&&category.children.map((item,index)=>{
-                         return (
-                           
-                            <CardContent key={index} deleteItem={()=>{this.deleteItem(category._id,item)}} onOpenEditDialog={()=>this.onOpenEditDialog(item)} info={{...item,img:category.bgImage||'/share/public/icon/logo.svg'}} xs={4} sm={2} md={1}/>
-                          
-                         )
-                      })
-                    } 
-                  </GridContainer>
-                  </CardBody>
-                  {
-                    !category.children || category.children.length == 0 ?(
-                      <CardFooter stats>
-                        <div className={classes.stats}>
-                          <Danger>
-                            <Warning />
-                          </Danger>
-                          <span>该类下暂无内容，请添加有效内容</span>
-                        </div>
-                      </CardFooter> 
-                    ):null
-                  }
 
-                </Card>
-              </GridItem>
-            </GridContainer>
+                      {
+                        window.__USER_INFO__ && window.__USER_INFO__._id == category.belong ? (
+                          <React.Fragment>
+                            <Tooltip title="编辑分类">
+                              <Button variant="fab" color="inherit" aria-label="Edit" className={classes.button} onClick={() => { this.props.openEditCategoryDialog(category._id, category.name) }}>
+                                <EditIcon color="action" />
+                              </Button>
+                            </Tooltip>
+                            <Tooltip title="删除分类">
+                              <Button variant="fab" aria-label="Delete" className={classes.button} onClick={() => { this.props.deleteCategory(category._id) }}>
+                                <DeleteIcon />
+                              </Button>
+                            </Tooltip>
+                          </React.Fragment>
+                        ) : null
+                      }
+
+                    </CardHeader>
+                    <CardBody>
+                      <GridContainer>
+                        {
+                          category.children && category.children.map((item, index) => {
+                            return (
+
+                              <CardContent key={index} deleteItem={() => { this.deleteItem(category._id, item) }} onOpenEditDialog={() => this.onOpenEditDialog(item)} info={{ ...item, img: category.bgImage || '/share/public/icon/logo.svg' }} xs={4} sm={2} md={1} />
+
+                            )
+                          })
+                        }
+                      </GridContainer>
+                    </CardBody>
+                    {
+                      !category.children || category.children.length == 0 ? (
+                        <CardFooter stats>
+                          <div className={classes.stats}>
+                            <Danger>
+                              <Warning />
+                            </Danger>
+                            <span>该类下暂无内容，请添加有效内容</span>
+                          </div>
+                        </CardFooter>
+                      ) : null
+                    }
+
+                  </Card>
+                </GridItem>
+              </GridContainer>
             )
-            
+
           })
         }
         {
-          window.__USER_INFO__._id?(
+          window.__USER_INFO__._id ? (
             <GridContainer key={categories.length} addButton={true} onClick={this.props.openAddCategoryDialog}>
               <GridItem xs={12} sm={12} md={12}>
                 <Card>
                   <CardHeader color="info" stats icon>
                     <CardIcon color="info">
                       <Icon>
-                        <AddIcon/>
+                        <AddIcon />
                       </Icon>
                     </CardIcon>
                   </CardHeader>
-                  
+
                   <CardFooter stats>
                     <div className={classes.stats}>
                       <Danger>
-                        <Tips color={'action'}/>
+                        <Tips color={'action'} />
                       </Danger>
                     </div>
                     <span>点击卡片添加</span>
@@ -152,9 +180,9 @@ class Share extends React.Component {
                 </Card>
               </GridItem>
             </GridContainer>
-          ):null
+          ) : null
         }
-        
+        <DialogAlert {...dialog} />
       </div>
     );
   }
