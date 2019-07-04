@@ -15,7 +15,7 @@ import { REDIS_MESSAGE } from "../config/constConfig"
 
 const notify = new Notifications({title:'记录快乐'})
 
-notify.showNotify()
+
 
 new SokcetServer({
   events:{
