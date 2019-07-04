@@ -13,7 +13,7 @@ export default class Notifications {
         }
     }
     showNotify(params={}){
-        if(Notification.permission!='granted') return false
+        if(Notification.permission!='granted' || !window.Notification || !Notification) return false
         const {title='记录快乐',body='记录你遇到的快乐！',icon} = params;
         return new Notification(title,{body,icon:icon || this.icon,renotify:true,tag:Math.random()})
     }
