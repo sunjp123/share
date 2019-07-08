@@ -2,7 +2,7 @@
 const args = require('minimist')(process.argv.slice(2));
 const pconfig = require('../config/pconfig')
 var mongoose = require('mongoose'),
-    DB_URL = `mongodb://${args.env=="development"?'localhost':pconfig.HOST.MONGODB}:27017/share`;
+    DB_URL = `mongodb://${args.env=="development"?'localhost':(process.env.MONGOADMIN+':'+process.env.MONGOPWD+'@'+pconfig.HOST.MONGODB)}:27017/share`;
 
 /**
  * 连接
