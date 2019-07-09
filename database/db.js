@@ -7,8 +7,17 @@ var mongoose = require('mongoose'),
 /**
  * 连接
  */
+if(args.env=="development"){
+    mongoose.connect(DB_URL);
+}else{
+    mongoose.connect(DB_URL,{ auth:{
+        authdb: "admin",
+        user: process.env.MONGOADMIN,
+        password:process.env.MONGOPWD
+    
+    }});
+}
 
-mongoose.connect(DB_URL);
 /**
   * 连接成功
   */
