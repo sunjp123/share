@@ -6,8 +6,7 @@ pipeline:
   build:  # Build
     image: node
     commands:
-        - npm i yarn -g
-        - yarn
+        - npm i 
         - npm run dist
   publish:  # Build image and publish to private registry
     image: plugins/docker
